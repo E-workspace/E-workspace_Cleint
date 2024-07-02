@@ -7,104 +7,122 @@ body {
   padding: 0;
 }
 
-.register-container,
-.login-container,
-.dashboard-container {
-  width: 300px;
-  margin: 100px auto;
+.register-container {
+  width: 400px;
+  margin: 50px auto;
   padding: 20px;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.register-container h2,
-.login-container h2,
-.dashboard-container h2 {
-  text-align: center;
-}
-
-.register-container form,
-.login-container form,
-.modal-content form {
-  display: flex;
-  flex-direction: column;
-}
-
-.register-container input,
-.login-container input,
-.modal-content input {
-  margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.register-container button,
-.login-container button,
-.modal-content button {
-  padding: 10px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-/* src/index.css */
-
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal h2 {
+.register-container h2 {
+  text-align: center;
   margin-bottom: 20px;
 }
 
-.modal input {
+.register-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-container input[type="text"],
+.register-container input[type="email"],
+.register-container input[type="password"],
+.register-container input[type="file"],
+.register-container select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
+  padding: 12px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
-.modal button {
-  padding: 10px 20px;
+.register-container select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 10px);
+  background-position-y: 50%;
+  padding-right: 30px;
+}
+
+.register-container button[type="submit"] {
+  width: 100%;
+  padding: 12px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.modal button:hover {
+.register-container button[type="submit"]:hover {
   background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .register-container {
+    width: 90%;
+    margin: 20px auto;
+  }
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.listItem:hover {
+  background: #e2e8f0;
+  cursor: pointer;
+}
+
+.github-corner svg {
+  position:absolute;
+  right:0;
+  top:0;
+  mix-blend-mode:darken;
+  color:#ffffff;
+  fill:#000000;
+}
+.github-corner:hover .octo-arm {
+  animation:octocat-wave .56s;
+}
+@keyframes octocat-wave {
+  0%, 100% {
+    transform:rotate(0);
+  }
+  20%, 60% { 
+    transform:rotate(-20deg);
+  
+  } 40%, 80% {
+    transform:rotate(10deg);
+  }
+}
+
+
+.css-1haktuu-MuiTableRow-root{
+  background-color: #000000;
 }

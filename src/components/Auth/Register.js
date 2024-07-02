@@ -1,5 +1,4 @@
 // src/components/Auth/Register.js
-
 import React, { useState, useEffect } from 'react';
 import { register } from '../../services/api';
 import { toast } from 'react-toastify';
@@ -11,6 +10,8 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
+    const [role, setRole] = useState('');
     const navigate = useNavigate();
     const { token } = useAuth();
 
@@ -22,8 +23,15 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('profileImage', profileImage);
+        formData.append('role', role);
+
         try {
-            await register({ username, email, password });
+            await register(formData);
             toast.success('OTP sent to your email');
             navigate('/verify-otp', { state: { email } });
         } catch (error) {
@@ -57,6 +65,21 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
+                <input
+                    type="file"
+                    onChange={(e) => setProfileImage(e.target.files[0])}
+                    required
+                />
+                <select value={role} onChange={(e) => setRole(e.target.value)} required>
+                    <option value="" disabled>Select Role</option>
+                    <option value="Full Stack Developer">Full Stack Developer</option>
+                    <option value="Frontend Developer">Frontend Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="DevOps">DevOps</option>
+                    <option value="Test Engineer">Test Engineer</option>
+                    {/* Add more roles as needed */}
+                </select>
                 <button type="submit">Register</button>
             </form>
         </div>

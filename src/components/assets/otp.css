@@ -1,0 +1,63 @@
+/* OTPModal.css */
+
+/* Modal container */
+.modal {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Heading style */
+.modal h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* OTP input style */
+.modal input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Submit button style */
+.modal .submit-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.modal .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Toastify notification styling (optional, if needed) */
+.Toastify__toast-container {
+    padding: 15px;
+    font-size: 1rem;
+}
+
+.Toastify__toast--success {
+    background-color: #28a745;
+}
+
+.Toastify__toast--error {
+    background-color: #dc3545;
+}
+
+.Toastify__toast-body {
+    color: #fff;
+}

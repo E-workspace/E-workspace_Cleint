@@ -17,13 +17,14 @@ const AuthProvider = ({ children }) => {
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data);
+                    console.log(data, "user profiles")
                 }
             } catch (error) {
                 console.error('Session Check Error:', error);
             } finally {
                 setLoading(false);
             }
-        };  
+        };
         checkSession();
     }, []);
 

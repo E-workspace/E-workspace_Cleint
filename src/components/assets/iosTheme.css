@@ -1,0 +1,14 @@
+/* Custom styles for the cards */
+.custom-card {
+    background: rgba(255, 255, 255, 0.5) !important; /* Transparent white background */
+    color: rgba(0, 0, 0, 0.7) !important; /* Light black text */
+    border: none;
+    backdrop-filter: blur(10px); /* iOS-like blur effect */
+  }
+  
+  .custom-card-header {
+    background: rgba(255, 255, 255, 0.3) !important; /* Slightly more transparent for header */
+    border-bottom: none;
+    color: rgba(0, 0, 0, 0.7) !important; /* Light black text */
+  }
+  
