@@ -28,7 +28,7 @@ import ApiIcon from '@mui/icons-material/Api';
 import AiIcon from '@mui/icons-material/Psychology';
 import SocialIcon from '@mui/icons-material/People';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
 import Course from '../Courses/CoursesOverview';
@@ -42,6 +42,9 @@ import Ai from '../GPT-vetting/Ai';
 import Landing from '../CodeEditor_components/components/Landing'
 import CodeStore from '../Savedcode/CodeStore'
 import ResponsiveDatePickers from '../GPT-vetting/Calender';
+import Tidio from '../Tidio';
+import Settings from '../Settings';
+
 
 
 
@@ -172,6 +175,8 @@ export default function Dashboard() {
         return <Landing/>
       case 'Code Store':
         return <CodeStore/>
+      case 'Settings':
+        return <Settings/>
       default:
         return <Course />;
     }
@@ -238,8 +243,8 @@ export default function Dashboard() {
             { text: `API's`, icon: <ApiIcon />, action: () => handleViewChange('ApiCards') },
             { text: 'AI Interview', icon: <AiIcon /> , action : () => handleViewChange('Ai_interview') },
             { text: 'Social Network', icon: <SocialIcon /> },
-            { text: 'Profile', icon: <ProfileIcon />, action: () => handleViewChange('Profile') },
-            { text: 'Certification', icon: <MilitaryTechIcon /> },
+            // { text: 'Profile', icon: <ProfileIcon />, action: () => handleViewChange('Profile') },
+            { text: 'Settings', icon: <SettingsIcon />, action : () => handleViewChange('Settings') },
             { text: 'Logout', icon: <LogoutIcon />, action: confirmLogout },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
@@ -255,6 +260,9 @@ export default function Dashboard() {
         <DrawerHeader />
         {renderView()}
       </Main>
+
+      <Tidio/>
     </Box>
+
   );
 }

@@ -18,55 +18,25 @@ const OTPModal = ({ email }) => {
     };
 
     return (
-        <div
-            style={{
-                width: '300px',
-                backgroundColor: '#fff',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                padding: '20px',
-                textAlign: 'center',
-                margin: '0 auto'
-            }}
-        >
-            <h2
-                style={{
-                    fontSize: '1.2rem',
-                    marginBottom: '15px',
-                    color: '#333'
-                }}
-            >
-                Enter OTP sent to {email}
-            </h2>
-            <input
-                type="text"
-                placeholder="OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                style={{
-                    width: '100%',
-                    padding: '10px',
-                    marginBottom: '15px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '1rem'
-                }}
-            />
-            <button
-                onClick={handleVerifyOTP}
-                style={{
-                    backgroundColor: '#007bff',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '10px 20px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    transition: 'background-color 0.3s ease'
-                }}
-            >
-                Submit
-            </button>
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md text-center">
+                <h2 className="text-xl font-bold mb-4 text-gray-800">
+                    Enter OTP sent to {email}
+                </h2>
+                <input
+                    type="text"
+                    placeholder="OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring focus:ring-blue-200"
+                />
+                <button
+                    onClick={handleVerifyOTP}
+                    className="w-full px-4 py-3 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200"
+                >
+                    Submit
+                </button>
+            </div>
         </div>
     );
 };

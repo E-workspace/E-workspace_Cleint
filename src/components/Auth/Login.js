@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
@@ -30,63 +29,47 @@ const Login = () => {
     };
 
     return (
-        <div
-            style={{
-                width: '300px',
-                margin: '100px auto',
-                padding: '20px',
-                backgroundColor: '#fff',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                textAlign: 'center'
-            }}
-        >
-            <h2 style={{ textAlign: 'center' }}>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    style={{
-                        marginBottom: '10px',
-                        padding: '8px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        width: '100%'
-                    }}
-                    required
-                />
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    style={{
-                        marginBottom: '10px',
-                        padding: '8px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        width: '100%'
-                    }}
-                    required
-                />
-                <button
-                    type="submit"
-                    style={{
-                        padding: '10px',
-                        backgroundColor: '#007bff',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        width: '100%'
-                    }}
-                >
-                    Login
-                </button>
-            </form>
+        <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="w-full max-w-md p-8 space-y-8">
+                <h2 className="text-3xl font-bold text-center">Welcome back</h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    />
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    />
+                    <div className="text-right">
+                        <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-3 font-bold text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-200"
+                    >
+                        Log In
+                    </button>
+                    <div className="relative flex items-center justify-center my-4">
+                        <span className="absolute px-4 bg-white text-gray-500">or</span>
+                        <div className="w-full border-t border-gray-300"></div>
+                    </div>
+                    <button
+                        type="button"
+                        className="w-full px-4 py-3 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-200"
+                    >
+                        Log in with Facebook
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

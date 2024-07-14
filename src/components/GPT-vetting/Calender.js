@@ -103,13 +103,12 @@ export default function ResponsiveDatePickers() {
         <>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['StaticDateTimePicker']}>
-              <DemoItem label="Static variant">
+        
                 <StaticDateTimePicker
                   defaultValue={selectedDate}
                   shouldDisableDate={shouldDisableDate}
                   onChange={handleDateChange}
                 />
-              </DemoItem>
             </DemoContainer>
           </LocalizationProvider>
           <Button onClick={handleDateSubmit}>Submit</Button>

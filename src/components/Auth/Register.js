@@ -1,4 +1,3 @@
-// src/components/Auth/Register.js
 import React, { useState, useEffect } from 'react';
 import { register } from '../../services/api';
 import { toast } from 'react-toastify';
@@ -41,47 +40,69 @@ const Register = () => {
     };
 
     return (
-        <div className="register-container">
-            <h2>Register</h2>
-            <form onSubmit={handleRegister}>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <input
-                    type="file"
-                    onChange={(e) => setProfileImage(e.target.files[0])}
-                    required
-                />
-                <select value={role} onChange={(e) => setRole(e.target.value)} required>
-                    <option value="" disabled>Select Role</option>
-                    <option value="Full Stack Developer">Full Stack Developer</option>
-                    <option value="Frontend Developer">Frontend Developer</option>
-                    <option value="Backend Developer">Backend Developer</option>
-                    <option value="Cyber Security">Cyber Security</option>
-                    <option value="DevOps">DevOps</option>
-                    <option value="Test Engineer">Test Engineer</option>
-                    {/* Add more roles as needed */}
-                </select>
-                <button type="submit">Register</button>
-            </form>
+        <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="w-full max-w-md p-8 space-y-8">
+                <h2 className="text-3xl font-bold text-center">Register</h2>
+                <form onSubmit={handleRegister} className="space-y-6">
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    />
+                    <input
+                        type="file"
+                        onChange={(e) => setProfileImage(e.target.files[0])}
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    />
+                    <select
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                        className="w-full px-4 py-3 text-lg text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        required
+                    >
+                        <option value="" disabled>Select Role</option>
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="Frontend Developer">Frontend Developer</option>
+                        <option value="Backend Developer">Backend Developer</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="Test Engineer">Test Engineer</option>
+                        {/* Add more roles as needed */}
+                    </select>
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-3 font-bold text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-200"
+                    >
+                        Register
+                    </button>
+                </form>
+                <div className="text-center">
+                <p className="text-sm text-gray-700">
+                    Already registered?{' '}
+                    <a href="/login" className="text-blue-600 hover:underline">Log in</a>
+                </p>
+            </div>
+            </div>
         </div>
     );
 };
