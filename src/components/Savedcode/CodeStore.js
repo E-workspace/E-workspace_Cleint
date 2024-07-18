@@ -92,7 +92,7 @@ export default function StickyHeadTable() {
 
   const getData = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/getSavedCode/GetCode', {
+      const response = await axios.post('https://e-workspace-server-v1-ms-2.onrender.com/api/getSavedCode/GetCode', {
         username: user.username,
         email: user.email,
       });
