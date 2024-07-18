@@ -90,19 +90,21 @@ export default function StickyHeadTable() {
     }
   }, [user]);
 
-  const getData = async () => {
+ const getData = async () => {
     try {
-      const response = await axios.post('https://e-workspace-server-v1-ms-2.onrender.com/api/getSavedCode/GetCode', {
-        username: user.username,
-        email: user.email,
-      });
-      if (response.data && response.data.data) {
-        setRows(response.data.data);
-      }
+        const response = await axios.post('https://e-workspace-server-v1-ms-2.onrender.com/api/getSavedCode/GetCode', {
+            username: user.username,
+            email: user.email,
+        }, {
+            withCredentials: true,  // Ensure credentials are sent
+        });
+        if (response.data && response.data.data) {
+            setRows(response.data.data);
+        }
     } catch (error) {
-      console.error('Error fetching saved code:', error);
+        console.error('Error fetching saved code:', error);
     }
-  };
+};
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
