@@ -229,6 +229,16 @@ const Landing = () => {
       },
     },
   };
+
+  // Fetch CSRF token
+  const fetchCsrfToken = async () => {
+    const response = await fetch('https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token', {
+      credentials: 'include',
+    });
+    const data = await response.json();
+    return data.csrfToken;
+  };
+
   const openModal = () => {
     Swal.fire({
       title: 'Enter Your File name To Save The Code',
@@ -254,7 +264,7 @@ const Landing = () => {
     });
   };
 
-  const saveCode = (filename) => {
+  const saveCode = async (filename) => {
     console.log('user', user);
 
     const date = new Date();
@@ -269,26 +279,27 @@ const Landing = () => {
     setSavedCodes((prev) => [...prev, codeData]);
     console.log([...savedCodes, codeData], 'code');
 
-    const saveOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any additional headers here as needed
-      },
-      body: JSON.stringify(codeData),
-    };
+    try {
+      const csrfToken = await fetchCsrfToken();
+      const saveOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+        },
+        body: JSON.stringify(codeData),
+        credentials: 'include',
+      };
 
-    fetch("https://e-workspace-server-v1-ms-1.onrender.com/api/SaveCode/StoreCode", saveOptions)
-      .then(response => response.json())
-      .then(data => {
-        console.log("Save code response:", data);
-        showSuccessToast(`Code saved successfully!`);
-      })
-      .catch(error => {
-        console.error("Save code error:", error);
-        let errorMessage = "Failed to save code.";
-        showErrorToast(errorMessage);
-      });
+      const response = await fetch("https://e-workspace-server-v1-ms-1.onrender.com/api/SaveCode/StoreCode", saveOptions);
+      const data = await response.json();
+      console.log("Save code response:", data);
+      showSuccessToast(`Code saved successfully!`);
+    } catch (error) {
+      console.error("Save code error:", error);
+      let errorMessage = "Failed to save code.";
+      showErrorToast(errorMessage);
+    }
   };
 
   const handleSaveCode = () => {
