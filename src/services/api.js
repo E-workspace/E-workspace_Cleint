@@ -1,13 +1,13 @@
 // src/services/api.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = 'https://e-workspace-server-v1-ms-1.onrender.com/api/auth';
 
 axios.defaults.withCredentials = true;
 
 // Function to fetch CSRF token
 export const getCsrfToken = async () => {
-    const response = await axios.get('http://localhost:5000/api/csrf-token');
+    const response = await axios.get('https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token');
     return response.data.csrfToken;
 };
 
