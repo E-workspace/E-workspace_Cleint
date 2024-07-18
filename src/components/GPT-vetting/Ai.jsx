@@ -150,7 +150,7 @@ function Ai() {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/api/skills', {
+      const response = await fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/checkBooking/skills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -170,7 +170,7 @@ function Ai() {
         });
 
         if (bookingID) {
-          const checkResponse = await fetch(`http://localhost:8000/api/checkBooking/${bookingID}`, {
+          const checkResponse = await fetch(`https://e-workspace-server-v1-ms-2.onrender.com/checkBooking/${bookingID}`, {
             method: 'GET'
           });
           console.log(checkResponse.ok, "ok resp")
