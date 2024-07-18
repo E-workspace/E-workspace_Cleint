@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/protected/profile', {
+                const response = await fetch('https://e-workspace-server-v1-ms-1.onrender.com/api/protected/profile', {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
         console.log(email, password, "UI"); // Ensure email and password are logged correctly
     
         try {
-            const csrfTokenResponse = await fetch('http://localhost:5000/api/csrf-token', {
+            const csrfTokenResponse = await fetch('https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token', {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -59,13 +59,13 @@ const AuthProvider = ({ children }) => {
     
     const logout = async () => {
         try {
-            const csrfTokenResponse = await fetch('http://localhost:5000/api/csrf-token', {
+            const csrfTokenResponse = await fetch('https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token', {
                 method: 'GET',
                 credentials: 'include',
             });
             const { csrfToken } = await csrfTokenResponse.json();
 
-            const response = await fetch('http://localhost:5000/api/auth/logout', {
+            const response = await fetch('https://e-workspace-server-v1-ms-1.onrender.com/api/auth/logout', {
                 method: 'POST',
                 headers: { 'csrf-token': csrfToken },
                 credentials: 'include',
