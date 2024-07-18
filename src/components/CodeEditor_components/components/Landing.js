@@ -278,7 +278,7 @@ const Landing = () => {
       body: JSON.stringify(codeData),
     };
 
-    fetch("http://localhost:8000/api/SaveCode/StoreCode", saveOptions)
+    fetch("https://e-workspace-server-v1-ms-1.onrender.com/api/SaveCode/StoreCode", saveOptions)
       .then(response => response.json())
       .then(data => {
         console.log("Save code response:", data);
