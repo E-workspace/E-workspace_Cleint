@@ -28,6 +28,7 @@ import ApiIcon from '@mui/icons-material/Api';
 import AiIcon from '@mui/icons-material/Psychology';
 import SocialIcon from '@mui/icons-material/People';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
@@ -35,7 +36,7 @@ import Course from '../Courses/CoursesOverview';
 import UserProfileCard from '../Profile/Profile';
 import Notes from '../Notes/Notes';
 import PostUpload from './PostUpload';
-import ApiCards from '../ApiCards';
+import ApiCards from '../ApiCards/ApiCards';
 import SkelotenCourseCardLoader from '../Skeloten_course_card_loader';
 import McqCards from '../McqComponent/McqCards';
 import Ai from '../GPT-vetting/Ai';
@@ -227,7 +228,7 @@ export default function Dashboard() {
             { text: 'Notes', icon: <NotesIcon />, action: () => handleViewChange('Notes') },
             { text: 'Code Editor', icon: <CodeIcon />, action: () => handleViewChange('Code Editor') },
             { text: 'Code Store', icon: <ShoppingCartIcon />, action : ()=> handleViewChange('Code Store') },
-            { text: 'Post Upload', icon: <CloudUploadIcon />, action : ()=> handleViewChange('Post_upload') },
+            { text: 'Create Web Page', icon: <AddBoxIcon />, action : ()=> handleViewChange('Post_upload') },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton onClick={item.action || (() => console.log('Button clicked!'))}>

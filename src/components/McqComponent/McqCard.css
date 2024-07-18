@@ -1,0 +1,145 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
+
+
+
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.glassmorphic-background {
+    background-color: rgba(255, 255, 255, 0.808);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.404);
+  }
+  
+
+.row {
+  margin: 0 0 !important;
+}
+
+.course_card {
+  margin: 25px 10px;
+  width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  transition: 0.25s ease-in-out;
+  border: 1px solid #ddd; /* Added border for images */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Prevent image overflow */
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.20), 0 3px 3px rgba(0, 0, 0, 0.30); /* Added box-shadow */
+
+  
+}
+
+.course_card_img {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  
+}
+
+.course_card_img img {
+  height: 250px;
+  width: 100%;
+  transition: 0.25s all;
+}
+
+.course_card_img img:hover {
+  transform: translateY(-3%);
+}
+
+.course_card_content {
+  padding: 16px;
+}
+
+.course_title {
+  font-family: 'Hind', sans-serif;
+  font-size: 18px;
+  font-weight: bold; /* Made title bold */
+}
+
+.course_description {
+  font-family: 'Hind', sans-serif;
+  text-align: justify;
+}
+
+.course_card_footer {
+  padding: 10px 16px;
+  margin-top: auto;
+}
+
+.btn {
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #007bff;
+  border-color: #007bff;
+  opacity: 0.65;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #0062cc;
+  border-color: #005cbf;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #0062cc;
+  border-color: #005cbf;
+  background-image: none;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #0062cc;
+  border-color: #005cbf;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #007bff;
+  border-color: #007bff;
+  opacity: 0.65;
+}

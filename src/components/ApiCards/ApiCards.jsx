@@ -21,7 +21,7 @@ function PaperComponent(props) {
   );
 }
 
-const McqCards = () => {
+const ApiCards = () => {
   // Define the tech stacks and their respective cards
   const techStacks = [
     {
@@ -257,5 +257,5 @@ const McqCards = () => {
   );
 };
 
-export default McqCards;
+export default ApiCards;
         
