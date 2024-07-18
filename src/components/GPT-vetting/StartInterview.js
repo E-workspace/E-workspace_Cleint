@@ -32,7 +32,7 @@ const MyComponent = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/startinterview/getQuestions', {
+                const response = await fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/startinterview/getQuestions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(users)
@@ -139,7 +139,7 @@ const MyComponent = () => {
 
     const handleSubmit = async (finalResponses = responses) => {
         try {
-            const response = await fetch('http://localhost:8000/api/Aiservice/scoreMyAnswer', {
+            const response = await fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/Aiservice/scoreMyAnswer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ responses: finalResponses })
