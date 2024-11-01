@@ -20,6 +20,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import './codestore.css';
+import CloseIcon from '@mui/icons-material/Close';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const columns = [
   { id: 'filename', label: 'File Name', minWidth: 170 },
@@ -38,15 +41,16 @@ const modalStyle = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-  backgroundColor: '#1e1e1e', // Black background
-  borderRadius: 8, // Rounded corners
+  backgroundColor: 'black',
+  borderRadius: 8,
 };
 
 const contentStyle = {
-  maxHeight: 'calc(100% - 50px)', // Adjust to fit within the modal
-  overflow: 'auto', // Enable scrollbar for the content
-  scrollbarWidth: 'thin', // For Firefox
-  scrollbarColor: '#6c757d #1e1e1e', // For Firefox
+  maxHeight: 'calc(100% - 50px)',
+  overflow: 'auto',
+  scrollbarWidth: 'thin',
+  scrollbarColor: '#6c757d #1e1e1e',
+  backgroundColor: 'black',
 };
 
 const scrollBarStyle = `
@@ -65,7 +69,6 @@ const scrollBarStyle = `
     border: 2px solid #1e1e1e;
   }
 
-  /* For Firefox */
   scrollbar-width: thin;
   scrollbar-color: #6c757d #1e1e1e;
 `;
@@ -90,21 +93,19 @@ export default function StickyHeadTable() {
     }
   }, [user]);
 
- const getData = async () => {
+  const getData = async () => {
     try {
-        const response = await axios.post('https://e-workspace-server-v1-ms-2.onrender.com/api/getSavedCode/GetCode', {
-            username: user.username,
-            email: user.email,
-        }, {
-            withCredentials: true,  // Ensure credentials are sent
-        });
-        if (response.data && response.data.data) {
-            setRows(response.data.data);
-        }
+      const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/getSavedCode/GetCode`, {
+        username: user.username,
+        email: user.email,
+      });
+      if (response.data && response.data.data) {
+        setRows(response.data.data);
+      }
     } catch (error) {
-        console.error('Error fetching saved code:', error);
+      console.error('Error fetching saved code:', error);
     }
-};
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -117,11 +118,29 @@ export default function StickyHeadTable() {
 
   const handleDelete = async (filename) => {
     try {
-      await axios.delete('/api/deleteCode/', { data: { filename } });
+      await axios.delete(`${process.env.REACT_APP_API_URL_MS2}/deleteCode/`, { data: { filename } });
       getData();
     } catch (error) {
       console.error('Error deleting code:', error);
     }
+  };
+
+  const confirmDelete = (filename) => {
+    Swal.fire({
+      title: 'Confirm Deletion',
+      text: 'Are you sure you want to delete this code snippet?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(filename);
+        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+      }
+    });
   };
 
   const handleView = (code, language) => {
@@ -154,7 +173,7 @@ export default function StickyHeadTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth, color: 'white', backgroundColor: 'black' }}
+                  style={{ minWidth: column.minWidth, color: 'white', backgroundColor: '#0096FF', fontFamily: 'Oswald, serif', fontWeight: '650' }}
                 >
                   {column.label}
                 </TableCell>
@@ -175,14 +194,14 @@ export default function StickyHeadTable() {
                             <Button variant="contained" color="primary" onClick={() => handleView(row.code, row.filename)}>
                               View
                             </Button>
-                            <Button variant="contained" color="secondary" onClick={() => handleDelete(row.filename)} style={{ marginLeft: 8 }}>
+                            <Button variant="contained" color="secondary" onClick={() => confirmDelete(row.filename)} style={{ marginLeft: 8 }}>
                               Delete
                             </Button>
                           </TableCell>
                         );
                       }
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth, fontWeight: '650', fontFamily: 'Oswald, sans-serif' }}>
                           {value}
                         </TableCell>
                       );
@@ -210,18 +229,34 @@ export default function StickyHeadTable() {
                 <ContentCopyIcon />
               </IconButton>
             </CopyToClipboard>
-            <Button onClick={handleClose} sx={{ color: 'white', borderColor: 'white', float: 'right' }}>
-              Close
-            </Button>
+            <IconButton
+            onClick={handleClose}
+            sx={{
+              color: 'white',
+              float: 'right',
+              '&:hover': {
+                backgroundColor: 'red', // Background turns red on hover
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          
           </Typography>
           <Box sx={contentStyle}>
-            <SyntaxHighlighter language={currentLanguage} style={atomOneDark}>
+            <SyntaxHighlighter
+              language={currentLanguage}
+              style={atomOneDark}
+              customStyle={{ backgroundColor: '#000000', padding: '20px', borderRadius: '4px' }}
+            >
               {currentCode}
             </SyntaxHighlighter>
           </Box>
         </Box>
       </Modal>
-      <Snackbar open={copyAlert} autoHideDuration={2000} onClose={handleCopyClose}>
+
+      {/* Snackbar for copy alert */}
+      <Snackbar open={copyAlert} autoHideDuration={3000} onClose={handleCopyClose}>
         <Alert onClose={handleCopyClose} severity="success" sx={{ width: '100%' }}>
           Code copied to clipboard!
         </Alert>
