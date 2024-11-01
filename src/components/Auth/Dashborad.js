@@ -18,7 +18,7 @@ import {
   UserOutlined,
   VideoCameraFilled
 } from '@ant-design/icons';
-import "./Dashboard.css";
+
 import Swal from 'sweetalert2';
 import Course from '../Courses/CoursesOverview';
 import UserProfileCard from '../Profile/Profile';
