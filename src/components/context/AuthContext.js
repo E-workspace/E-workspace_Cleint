@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
     // Function to fetch the CSRF token
     const getCsrfToken = async () => {
         try {
-            const csrfTokenResponse = await fetch(`${process.env.REACT_APP_API_URL_MS1}/csrf-token`, {
+            const csrfTokenResponse = await fetch(`https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token`, {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL_MS1}/protected/profile`, {
+                const response = await fetch(`https://e-workspace-server-v1-ms-1.onrender.com/api/protected/profile`, {
                     method: 'GET',
                     credentials: 'include',
                 });
