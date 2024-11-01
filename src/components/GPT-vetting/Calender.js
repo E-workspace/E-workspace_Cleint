@@ -25,7 +25,7 @@ export default function ResponsiveDatePickers() {
 
   React.useEffect(() => {
     // Fetch existing interview date for the user
-    fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/preBookedUser/checkdatestatus', {
+    fetch(`${process.env.REACT_APP_API_URL_MS2}/preBookedUser/checkdatestatus`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export default function ResponsiveDatePickers() {
       return;
     }
 
-    fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/start-interview/selected-date', {
+    fetch(`${process.env.REACT_APP_API_URL_MS2}/start-interview/selected-date`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
