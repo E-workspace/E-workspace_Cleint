@@ -1,0 +1,158 @@
+/* Existing Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+body {
+    font-family: "Roboto", sans-serif !important;
+  }
+
+  
+  
+  .sec-icon::before,
+  .sec-icon::after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    margin-top: -5.5px;
+    top: 60%;
+    background: #333;
+    width: 50px;
+  }
+  
+  .sec-icon::before {
+    left: -70px;
+  }
+  
+  .sec-icon::after {
+    right: -70px;
+  }
+  
+  .advertisers-service-sec span {
+    color: rgb(255, 23, 131);
+  }
+  
+  .advertisers-service-sec .col {
+    padding: 0 1em 1em 1em;
+    text-align: center;
+  }
+  
+  .advertisers-service-sec .service-card {
+    width: 100%;
+    height: 100%;
+    padding: 2em 1.5em;
+    border-radius: 5px;
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: 0.5s;
+    position: relative;
+    font-family: 'Playfair Display', serif;
+    z-index: 2;
+    overflow: hidden;
+    background: #fff;
+    margin-bottom: 0; /* Remove bottom space under the card */
+  }
+  
+  .advertisers-service-sec .service-card::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #1d32f1;
+    position: absolute;
+    left: 0%;
+    top: -98%;
+    z-index: -2;
+    transition: all 0.4s cubic-bezier(0.77, -0.04, 0, 0.99);
+  }
+  
+  .advertisers-service-sec h3 {
+    font-size: 20px;
+    text-transform: capitalize;
+    font-weight: 600;
+    color: #1f194c;
+    margin: 1em 0;
+    z-index: 3;
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .advertisers-service-sec p {
+    color: #575a7b;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    z-index: 3;
+    font-family: 'Playfair Display', serif; 
+  }
+  
+  .advertisers-service-sec .icon-wrapper {
+    background-color: #2c7bfe;
+    position: relative;
+    margin: auto;
+    font-size: 30px;
+    height: 2.5em;
+    width: 2.5em;
+    color: #ffffff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: 0.5s;
+    z-index: 3;
+  }
+  
+  .advertisers-service-sec .service-card:hover:after {
+    top: 0%;
+  }
+  
+  .service-card .icon-wrapper {
+    background-color: #ffffff;
+    color: rgb(255, 23, 131);
+  }
+  
+  .advertisers-service-sec .service-card:hover .icon-wrapper {
+    color: #0dcaf0;
+  }
+  
+  .advertisers-service-sec .service-card:hover h3 {
+    color: #ffffff;
+  }
+  
+  .advertisers-service-sec .service-card:hover p {
+    color: #f0f0f0;
+  }
+  
+  /* New Styles for Button */
+  .advertisers-service-sec .service-card:hover .btn {
+    background-color: #f0f0f0; /* Light color for hover state */
+    color: #1f194c; /* Dark color for text when hovered */
+  }
+  
+  .btn-container {
+    margin-top: 1em;
+    text-align: center;
+    width: auto;
+  }
+
+  h2{
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .btn {
+    background-color: #2f0df0;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .btn:hover {
+    background-color: #310bdb;
+  }
+  
+  /* Remove line spacing below each card */
+  .advertisers-service-sec .row > .col {
+    margin-bottom: 0;
+  }
+  
