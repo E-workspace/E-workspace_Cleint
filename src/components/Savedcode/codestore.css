@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+
+/* Example custom styles for the scrollbar */
+.MuiTableContainer-root::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .MuiTableContainer-root::-webkit-scrollbar-thumb {
+    background: #555; /* Color of the scrollbar thumb */
+    border-radius: 10px;
+  }
+  
+  .MuiTableContainer-root::-webkit-scrollbar-track {
+    background: #333; /* Color of the scrollbar track */
+  }
+  
