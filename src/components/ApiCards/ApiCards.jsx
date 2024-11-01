@@ -1,261 +1,272 @@
-import React, { useState } from 'react';
-import { CCard, CCardBody, CCardHeader, CCardTitle, CCardText, CButton, CRow, CCol } from '@coreui/react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Paper from '@mui/material/Paper';
-import Draggable from 'react-draggable';
-import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import { Modal, Box, Typography, Button, IconButton } from "@mui/material"; // Import Material-UI components
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'; // Import Syntax Highlighter
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Import dark theme for syntax highlighting
+import CloseIcon from '@mui/icons-material/Close'; // Import close icon
+import "./Apicards.css"; // Assuming you have this CSS file
 
-function PaperComponent(props) {
-  return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} />
-    </Draggable>
-  );
-}
+const services = [
+  {
+    icon: "fa-shopping-cart",
+    title: "E-commerce API",
+    description: "Manage products, orders, and customer data seamlessly.",
+    usage: "Use this API to create and manage an online store. This allows you to handle inventory, track orders, and manage customer information.",
+    apiUrl: "https://api.example.com/e-commerce",
+    exampleCode: `// Example of creating a product
+const createProduct = async (product) => {
+    const response = await fetch('https://api.example.com/e-commerce/products', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product),
+    });
+    return response.json();
+};`,
+    // Nested data response structure
+    dataResponse: `{
+  "success": true,
+  "data": {
+    "product": {
+      "id": "12345",
+      "name": "Product Name",
+      "price": 19.99,
+      "stock": 100,
+      "category": {
+        "id": "cat01",
+        "name": "Electronics"
+      },
+      "supplier": {
+        "id": "sup01",
+        "name": "Supplier Name",
+        "contact": {
+          "email": "supplier@example.com",
+          "phone": "123-456-7890"
+        }
+      }
+    }
+  }
+}`,
+    exampleResponse: `// Example response when creating a product
+{
+  "success": true,
+  "message": "Product created successfully",
+  "data": {
+    "product": {
+      "id": "12345",
+      "name": "Product Name",
+      "price": 19.99,
+      "stock": 100,
+      "category": {
+        "id": "cat01",
+        "name": "Electronics"
+      },
+      "supplier": {
+        "id": "sup01",
+        "name": "Supplier Name",
+        "contact": {
+          "email": "supplier@example.com",
+          "phone": "123-456-7890"
+        }
+      }
+    }
+  }
+}`
+  },
+  {
+    icon: "fa-graduation-cap",
+    title: "E-learning API",
+    description: "Integration of courses, assessments, and student tracking.",
+    usage: "Ideal for building e-learning platforms. This API enables you to create courses, manage student enrollments, and track progress.",
+    apiUrl: "https://api.example.com/e-learning",
+    exampleCode: `// Example of retrieving courses
+const getCourses = async () => {
+    const response = await fetch('https://api.example.com/e-learning/courses');
+    return response.json();
+};`,
+    // Nested data response structure
+    dataResponse: `{
+  "success": true,
+  "data": {
+    "courses": [
+      {
+        "id": "1",
+        "title": "Introduction to Programming",
+        "duration": "4 weeks",
+        "students_enrolled": 200,
+        "instructor": {
+          "id": "inst01",
+          "name": "John Doe",
+          "bio": "Experienced software developer and educator."
+        }
+      },
+      {
+        "id": "2",
+        "title": "Advanced JavaScript",
+        "duration": "6 weeks",
+        "students_enrolled": 150,
+        "instructor": {
+          "id": "inst02",
+          "name": "Jane Smith",
+          "bio": "Expert in JavaScript and web technologies."
+        }
+      }
+    ]
+  }
+}`,
+    exampleResponse: `// Example response when retrieving courses
+{
+  "success": true,
+  "message": "Courses retrieved successfully",
+  "data": {
+    "courses": [
+      {
+        "id": "1",
+        "title": "Introduction to Programming",
+        "duration": "4 weeks",
+        "students_enrolled": 200,
+        "instructor": {
+          "id": "inst01",
+          "name": "John Doe",
+          "bio": "Experienced software developer and educator."
+        }
+      },
+      {
+        "id": "2",
+        "title": "Advanced JavaScript",
+        "duration": "6 weeks",
+        "students_enrolled": 150,
+        "instructor": {
+          "id": "inst02",
+          "name": "Jane Smith",
+          "bio": "Expert in JavaScript and web technologies."
+        }
+      }
+    ]
+  }
+}`
+  },
+  // Add other services similarly...
+];
 
-const ApiCards = () => {
-  // Define the tech stacks and their respective cards
-  const techStacks = [
-    {
-      stack: "Front-End Development",
-      cards: [
-        { topic: 'React.js', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'React.js', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'React.js', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-      ],
-    },
-    {
-      stack: "Back-End Development",
-      cards: [
-        { topic: 'Express.js', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'Express.js', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'Express.js', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-      ],
-    },
-    {
-      stack: "Databases",
-      cards: [
-        { topic: 'MongoDB', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'MongoDB', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'MongoDB', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-      ],
-    },
-    {
-      stack: "Programming Languages",
-      cards: [
-        { topic: 'JavaScript', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'Python', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-        { topic: 'Java', content: 'Concept: This MCQ Question Is Based On Your Experience' },
-      ],
-    },
-  ];
 
-  // Define the inline styles for iOS glassmorphism effect
-  const cardStyle = {
-    background: 'rgba(255, 255, 255, 0.15)', // Semi-transparent white background
-    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)', // Light shadow
-    backdropFilter: 'blur(18px)', // iOS-like blur effect
-    WebkitBackdropFilter: 'blur(18px)', // iOS-like blur effect for Safari
-    border: '1px solid rgba(255, 255, 255, 0.18)', // Light border
-    borderRadius: '10px', // Rounded corners
-    color: 'rgba(0, 0, 0, 0.7)', // Light black text
-    padding: '10px', // Padding inside the card
-    marginBottom: '1rem', // Margin at the bottom
+const AdvertisersService = () => {
+  const [open, setOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+
+  const handleOpen = (service) => {
+    setSelectedService(service);
+    setOpen(true);
   };
 
-  const cardHeaderStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent background
-    borderBottom: '1px solid rgba(255, 255, 255, 0.2)', // Light border at the bottom
-    color: 'rgba(0, 0, 0, 0.7)', // Light black text
-  };
-
-  const backgroundStyle = {
-    overflow: 'hidden',
-    position: 'fixed',
-    width: '100vw',
-    height: '100vh',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: -1,
-  };
-
-  const bgStyle = {
-    position: 'absolute',
-    borderRadius: '50%',
-    filter: 'blur(100px)',
-  };
-
-  const bg1Style = {
-    ...bgStyle,
-    height: '300px',
-    width: '800px',
-    top: '0px',
-    left: '-200px',
-    background: '#AEB8FE',
-    filter: 'blur(80px)',
-    borderRadius: '30%',
-  };
-
-  const bg2Style = {
-    ...bgStyle,
-    height: '300px',
-    width: '800px',
-    top: '0px',
-    right: '-200px',
-    background: '#AEB8FE',
-    filter: 'blur(80px)',
-    borderRadius: '30%',
-  };
-
-  const bg3Style = {
-    ...bgStyle,
-    height: '400px',
-    width: '1000px',
-    top: '0px',
-    right: '-600px',
-    background: '#FFBD00',
-  };
-
-  const bg4Style = {
-    ...bgStyle,
-    height: '350px',
-    width: '1200px',
-    bottom: '0px',
-    right: '-300px',
-    background: '#FF0054',
-    filter: 'blur(200px)',
-  };
-
-  const bg5Style = {
-    ...bgStyle,
-    height: '700px',
-    width: '600px',
-    bottom: '-300px',
-    left: '-100px',
-    background: '#758BFD',
-    filter: 'blur(170px)',
-    borderRadius: '30%',
-  };
-
-  const contentStyle = {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '2rem 0',
-  };
-
-  const headingStyle = {
-    marginBottom: '2rem',
-    fontSize: '2rem',
-    color: '#fff',
-  };
-
-  // Modal state and handlers
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({ header: '', content: '', difficulty: '' });
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const handleOpenModal = (header, content) => {
-    setModalContent({ header, content, difficulty: '' });
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  const handleDifficultyChange = (event) => {
-    setModalContent((prevContent) => ({ ...prevContent, difficulty: event.target.value }));
-  };
-
-  const handleSubmit = () => {
-    setSelectedOptions((prevOptions) => [...prevOptions, modalContent]);
-    handleCloseModal();
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedService(null);
   };
 
   return (
-    <>
-      <div style={backgroundStyle}>
-        <div style={bg1Style}></div>
-        <div style={bg2Style}></div>
-        <div style={bg3Style}></div>
-        <div style={bg4Style}></div>
-        <div style={bg5Style}></div>
-      </div>
-
-      <div style={contentStyle}>
-        {techStacks.map((tech, techIndex) => (
-          <div key={techIndex} style={{ width: '100%', textAlign: 'center' }}>
-            <div style={headingStyle}>{tech.stack}</div>
-            <CRow>
-              {tech.cards.map((item, index) => (
-                <CCol md="4" className="mb-3" key={index}>
-                  <CCard style={cardStyle}>
-                    <CCardHeader style={cardHeaderStyle}>{item.topic}</CCardHeader>
-                    <CCardBody>
-                      <CCardTitle>{item.topic} Card</CCardTitle>
-                      <CCardText>{item.content}</CCardText>
-                      <CButton color="light" onClick={() => handleOpenModal(item.topic, item.content)}>View</CButton>
-                    </CCardBody>
-                  </CCard>
-                </CCol>
-              ))}
-            </CRow>
+    <section id="advertisers" className="advertisers-service-sec pt-5 pb-5">
+      <div className="container">
+        {/* Section Header */}
+        <div className="row">
+          <div className="section-header text-center" style={{ marginBottom: '10%' }}>
+            <h2 className="fw-bold fs-1">
+              Our <span className="b-class-secondary">API</span> Services
+            </h2>
+            <p className="sec-icon">
+              <i className="fa-solid fa-gear"></i>
+            </p>
           </div>
-        ))}
+        </div>
+        
+        {/* Service Cards */}
+        <div className="row mt-5 mt-md-4 row-cols-1 row-cols-sm-1 row-cols-md-3 justify-content-center">
+          {services.map((service, index) => (
+            <div className="col" key={index}>
+              <div className="service-card">
+                {/* Card Icon */}
+                <div className="icon-wrapper">
+                  <i className={`fa-solid ${service.icon}`}></i>
+                </div>
+                {/* Card Title */}
+                <h3>{service.title}</h3>
+                {/* Card Description */}
+                <p>{service.description}</p>
+                {/* Button */}
+                <div className="btn-container">
+                  <button
+                    className="btn btn-primary"
+                    style={{ fontWeight: '600' }}
+                    onClick={() => handleOpen(service)} // Open modal with selected service
+                  >
+                    View API
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Modal Component */}
-      <Dialog
-        open={modalOpen}
-        onClose={handleCloseModal}
-        PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-      >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          {modalContent.header}
-        </DialogTitle>
-        <DialogContent>
-          <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '30ch' }, width: '100%' }} noValidate autoComplete="off">
-            <FormControl fullWidth>
-              <InputLabel id="difficulty-select-label">Difficulty</InputLabel>
-              <Select
-                labelId="difficulty-select-label"
-                id="difficulty-select"
-                value={modalContent.difficulty}
-                onChange={handleDifficultyChange}
-                label="Difficulty"
-              >
-                <MenuItem value="easy">Easy</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
-                <MenuItem value="hard">Hard</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Cancel
+      {/* Modal for displaying API usage */}
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 700, // Adjust width as needed
+          maxHeight: '80%', // Limit height for scrolling
+          bgcolor: 'background.paper',
+          borderRadius: '8px', // Make the modal rounded
+          boxShadow: 24,
+          p: 4,
+          overflowY: 'auto', // Enable vertical scrolling
+        }}>
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              color: 'gray'
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" component="h2">
+          {selectedService?.title} Usage
+        </Typography>
+        <div style={{ width: '100%', height: '2px', backgroundColor: 'black', marginTop: '10px', textAlign:'center' }} />
+        
+          <Typography sx={{ mt: 4 }}>
+            <strong>Description:</strong> {selectedService?.description}
+          </Typography>
+          <Typography sx={{ mt: 2 }}>
+            <strong>Usage:</strong> {selectedService?.usage}
+          </Typography>
+          <Typography sx={{ mt: 2 }}>
+            <strong>API URL:</strong> <a href={selectedService?.apiUrl} target="_blank" rel="noopener noreferrer">{selectedService?.apiUrl}</a>
+          </Typography>
+          <Typography sx={{ mt: 2 }}>
+            <strong>Example Code:</strong>
+          </Typography>
+          <SyntaxHighlighter language="javascript" style={atomDark}>
+            {selectedService?.exampleCode}
+          </SyntaxHighlighter>
+          <Typography sx={{ mt: 2 }}>
+            <strong>Example Response:</strong>
+          </Typography>
+          <SyntaxHighlighter language="json" style={atomDark}>
+            {selectedService?.exampleResponse}
+          </SyntaxHighlighter>
+          <Button onClick={handleClose} color="primary" variant="outlined" sx={{ mt: 2 }}>
+            Close
           </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        </Box>
+      </Modal>
+    </section>
   );
 };
 
-export default ApiCards;
-        
+export default AdvertisersService;
