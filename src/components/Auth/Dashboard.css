@@ -1,0 +1,22 @@
+/* Show drawer and button only on mobile screens (max-width: 768px) */
+@media (max-width: 768px) {
+    .mobile-menu-button {
+      display: inline-block !important; /* Show the button on mobile */
+    }
+  
+    .mobile-drawer {
+      display: block !important; /* Show the drawer on mobile */
+    }
+  }
+  
+  /* Hide drawer and button on larger screens (min-width: 768px) */
+  @media (min-width: 768px) {
+    .mobile-drawer {
+      display: none !important; /* Hide the drawer on desktop */
+    }
+  
+    .mobile-menu-button {
+      display: none !important; /* Hide the button on desktop */
+    }
+  }
+  
