@@ -205,7 +205,7 @@ useEffect(() => {
   
     try {
       setLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/Getnotes`, {
+      const response = await axios.post(`https://testms21-lsy8tzpz.b4a.run/api/Getnotes`, {
         email,
         username,
       }, {
@@ -223,7 +223,7 @@ useEffect(() => {
 
   const fetchCsrfToken = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL_MS1}/csrf-token'`, {
+      const response = await fetch(`https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token'`, {
         credentials: 'include',
       });
       const data = await response.json();
@@ -251,7 +251,7 @@ useEffect(() => {
       // Check if editing or adding a new note
       if (originalId) {
         // Edit existing note using the originalId
-        await axios.put(`${process.env.REACT_APP_API_URL_MS2}/editNote/${originalId}`, payload, {
+        await axios.put(`https://testms21-lsy8tzpz.b4a.run/api/editNote/${originalId}`, payload, {
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-Token": csrfToken,
@@ -261,7 +261,7 @@ useEffect(() => {
         toast.success("Note updated successfully!");
       } else {
         // Add new note
-        await axios.post(`${process.env.REACT_APP_API_URL_MS2}/Savenotes`, payload, {
+        await axios.post(`https://testms21-lsy8tzpz.b4a.run/api/Savenotes`, payload, {
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-Token": csrfToken,
@@ -327,7 +327,7 @@ useEffect(() => {
         setLoading(true); // Set loading state
         const csrfToken = await fetchCsrfToken();
   
-        await axios.delete(`${process.env.REACT_APP_API_URL_MS2}/deleteNote/${noteId}`, {
+        await axios.delete(`https://testms21-lsy8tzpz.b4a.run/api/deleteNote/${noteId}`, {
           headers: {
             "X-CSRF-Token": csrfToken,
           },
