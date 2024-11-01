@@ -122,6 +122,18 @@ function Ai() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const allTechnologies = [
+    'HTML', 'CSS', 'JavaScript', 'React.js', 'Express.js', 'Angular.js', 
+    'MongoDB', 'SQL', 'Node.js', 'API', 'GraphQL'
+  ];
+
+  const getAvailableTechnologies = (currentSkillId) => {
+    const selectedTechnologies = skills
+      .filter(skill => skill.id !== currentSkillId)
+      .map(skill => skill.skill);
+    return allTechnologies.filter(tech => !selectedTechnologies.includes(tech));
+  };
+
   const handleAddSkill = () => {
     if (skills.length < 5) {
       setSkills([...skills, { id: skills.length + 1, skill: '', level: '' }]);
@@ -150,12 +162,11 @@ function Ai() {
     };
 
     try {
-      const response = await fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/checkBooking/skills', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/skills`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      console.log(user, "users")
       if (response.ok) {
         const { value: bookingID } = await Swal.fire({
           title: 'Enter Booking ID',
@@ -170,15 +181,11 @@ function Ai() {
         });
 
         if (bookingID) {
-          const checkResponse = await fetch(`https://e-workspace-server-v1-ms-2.onrender.com/checkBooking/${bookingID}`, {
+          const checkResponse = await fetch(`${process.env.REACT_APP_API_URL_MS2}/checkBooking/${bookingID}`, {
             method: 'GET'
           });
-          console.log(checkResponse.ok, "ok resp")
-          console.log(checkResponse, "check full obj")
           if (checkResponse.ok) {
             const result = await checkResponse.json();
-            console.log(result, "result")
-            toast.success('Booking ID matched! Proceeding...');
             if (result.match) {
               toast.success('Booking ID matched! Proceeding...');
               navigate('/mic-check');
@@ -203,13 +210,17 @@ function Ai() {
       <Form>
         <Title>Add your top skills</Title>
         <Label>Enter main skills</Label>
-        {skills.map((skill, index) => (
+        {skills.map((skill) => (
           <FormRow key={skill.id}>
-            <Input
-              placeholder={`Main skill #${index + 1}`}
+            <Select
               value={skill.skill}
               onChange={(e) => handleChange(skill.id, 'skill', e.target.value)}
-            />
+            >
+              <option value="" disabled>Select a technology</option>
+              {getAvailableTechnologies(skill.id).map((tech, idx) => (
+                <option key={idx} value={tech}>{tech}</option>
+              ))}
+            </Select>
             <Select
               value={skill.level}
               onChange={(e) => handleChange(skill.id, 'level', e.target.value)}
@@ -217,7 +228,7 @@ function Ai() {
               <option value="" disabled>Select</option>
               <option value="fresher">Fresher</option>
               <option value="junior">Junior</option>
-              <option value="experienced">Experienced</option>
+              <option value="experience">Experience</option>
             </Select>
             {skills.length > 3 && (
               <IconButton onClick={() => handleRemoveSkill(skill.id)}>
