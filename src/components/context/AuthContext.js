@@ -55,7 +55,7 @@ const AuthProvider = ({ children }) => {
             const csrfToken = await getCsrfToken(); // Fetch CSRF token
             console.log(csrfToken, "token"); // Log CSRF token to verify it is received correctly
     
-            const response = await fetch(`${process.env.REACT_APP_API_URL_MS1}/auth/login`, {
+            const response = await fetch(`https://e-workspace-server-v1-ms-1.onrender.com/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
