@@ -235,3 +235,8 @@ body {
     --deg: 360deg;
   }
 }
+
+.custom-swal-width {
+  max-width: 80% !important; /* Increase the width of the SweetAlert modal */
+}
+
