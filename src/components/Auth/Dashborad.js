@@ -1,115 +1,159 @@
-// src/components/Dashboard.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import BookIcon from '@mui/icons-material/Book';
-import QuizIcon from '@mui/icons-material/Quiz';
-import NotesIcon from '@mui/icons-material/Notes';
-import CodeIcon from '@mui/icons-material/Code';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import ApiIcon from '@mui/icons-material/Api';
-import AiIcon from '@mui/icons-material/Psychology';
-import SocialIcon from '@mui/icons-material/People';
-import ProfileIcon from '@mui/icons-material/AccountCircle';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Layout, Menu, Button, Drawer, Space, Avatar, Badge,  Modal, List, notification  } from 'antd';
+import {
+  BookOutlined,
+  FormOutlined,
+  FileTextOutlined,
+  CodeOutlined,
+  ShoppingCartOutlined,
+  ApiOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  PlusOutlined,
+  SmileOutlined,
+  CommentOutlined,
+  CheckSquareOutlined,
+  BellOutlined,
+  UserOutlined,
+  VideoCameraFilled
+} from '@ant-design/icons';
+import "./Dashboard.css";
 import Swal from 'sweetalert2';
 import Course from '../Courses/CoursesOverview';
 import UserProfileCard from '../Profile/Profile';
 import Notes from '../Notes/Notes';
 import PostUpload from './PostUpload';
 import ApiCards from '../ApiCards/ApiCards';
-import SkelotenCourseCardLoader from '../Skeloten_course_card_loader';
 import McqCards from '../McqComponent/McqCards';
 import Ai from '../GPT-vetting/Ai';
-import Landing from '../CodeEditor_components/components/Landing'
-import CodeStore from '../Savedcode/CodeStore'
+import Landing from '../CodeEditor_components/components/Landing';
+import CodeStore from '../Savedcode/CodeStore';
 import ResponsiveDatePickers from '../GPT-vetting/Calender';
 import Tidio from '../Tidio';
 import Settings from '../Settings';
+import TaskTable from '../Task_system/Tasksystem';
+import { messaging } from './notification/firebase';
+import { getToken } from 'firebase/messaging';
+import axios from 'axios';
+import MainContainerChat from '../MainContainerChat';
+import CongratulationsModal from './BombConfettiEffect';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { addNotification, getNotifications, deleteNotification } from '../indexDb/Db'; // import your indexedDB helpers
 
-
-
-
-const drawerWidth = 240;
-
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    }),
-  }),
-);
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
-}));
+const { Header, Sider, Content } = Layout;
 
 export default function Dashboard() {
-  const theme = useTheme();
-  const [open, setOpen] = useState(false);
-  const [view, setView] = useState('Courses'); // State to track the current view
+  const [collapsed, setCollapsed] = useState(false);
+  const [view, setView] = useState('Courses'); 
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [showCodeEditor, setShowCodeEditor] = useState(false); // State to show the Code Editor iframe
+  const [showCodeEditor, setShowCodeEditor] = useState(false); 
+  const [openDrawer, setOpenDrawer] = useState(false); // For mobile Drawer
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isProfileModal, setIsProfileModal] = useState(false);
+  const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const dbRequest = window.indexedDB.open("keyval-store", 1); // Use versioning for upgrades
+
+      dbRequest.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        // Create object store if it doesn't exist
+        if (!db.objectStoreNames.contains("keyval")) {
+          db.createObjectStore("keyval");
+        }
+      };
+
+      dbRequest.onsuccess = (event) => {
+        const database = event.target.result;
+
+        // Transaction and object store
+        const transaction = database.transaction("keyval", "readonly");
+        const store = transaction.objectStore("keyval");
+
+        // Fetch notificationCount
+        const notificationCountRequest = store.get("notificationCount");
+        notificationCountRequest.onsuccess = () => {
+          setNotificationCount(notificationCountRequest.result || 0);
+        };
+
+        // Fetch notifications array
+        const notificationsRequest = store.get("notifications");
+        notificationsRequest.onsuccess = () => {
+          console.log(notificationsRequest.result, "res");
+          setNotifications(notificationsRequest.result || []);
+        };
+
+        // Handle errors for transactions
+        transaction.onerror = (error) => {
+          console.error("Transaction error:", error);
+        };
+      };
+
+      dbRequest.onerror = (error) => {
+        console.error("Error opening database:", error);
+      };
+    } catch (error) {
+      console.error("Error fetching notifications from keyval-store:", error);
+    }
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleNotificationClick = async (index) => {
+    console.log("Notification clicked:", notifications[index]); //
+    const updatedNotifications = [...notifications];
+    updatedNotifications.splice(index, 1); // Remove the clicked notification
+
+    // Update IndexedDB
+    const dbRequest = window.indexedDB.open("keyval-store", 1);
+    
+    dbRequest.onsuccess = (event) => {
+      const database = event.target.result;
+      const transaction = database.transaction("keyval", "readwrite");
+      const store = transaction.objectStore("keyval");
+
+      // Update notifications array in IndexedDB
+      store.put(updatedNotifications, "notifications");
+
+      // Update notification count
+      store.put(updatedNotifications.length, "notificationCount");
+
+      // Update state
+      setNotifications(updatedNotifications);
+      setNotificationCount(updatedNotifications.length);
+    };
+
+    dbRequest.onerror = (error) => {
+      console.error("Error opening database for updating notifications:", error);
+    };
   };
+
+  const handleIconClick = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleTaskCompletion = () => {
+    setOpenCongratulationsModal(true); 
+  };
+
+  const handleCloseCongratulationsModal = () => {
+    setOpenCongratulationsModal(false); 
+  };
+
+  const handleProfileModalClose = () => setIsProfileModalVisible(false);
 
   const handleViewChange = (newView) => {
     if (newView === 'ApiCards') {
@@ -117,9 +161,8 @@ export default function Dashboard() {
       setTimeout(() => {
         setLoading(false);
         setView(newView);
-      }, 2000); // Show the loader for 2 seconds
+      }, 2000); 
     } else if (newView === 'Code Editor') {
-      // Display the Code Editor iframe
       setShowCodeEditor(true);
       setView(newView);
     } else {
@@ -152,9 +195,11 @@ export default function Dashboard() {
     });
   };
 
+  console.log(user, 'users dash')
+
   const renderView = () => {
     if (loading) {
-      return <SkelotenCourseCardLoader />;
+      return <div>Loading...</div>;
     }
 
     switch(view) {
@@ -171,99 +216,186 @@ export default function Dashboard() {
       case 'McqCards':
         return <McqCards />;
       case 'Ai_interview':
-        return <ResponsiveDatePickers/>;
+        return <ResponsiveDatePickers />;
       case 'Code Editor':
-        return <Landing/>
+        return <Landing />;
       case 'Code Store':
-        return <CodeStore/>
+        return <CodeStore />;
       case 'Settings':
-        return <Settings/>
+        return <Settings />;
+      case 'Chat':
+        return <MainContainerChat />;
+      case 'Task_System':
+        return <TaskTable />;
+      case 'meet':
+        return <>
+        <iframe
+          allow="camera; microphone; display-capture; fullscreen; clipboard-read; clipboard-write; web-share; autoplay"
+          src="https://sfu.mirotalk.com/newroom"
+          style={{width:'100%', height:'97%', border:'none'}}
+      ></iframe>
+        </>;
       default:
         return <Course />;
     }
   };
 
+  useEffect(() => {
+    const retrieveAndSaveToken = async () => {
+      if (!user) return; 
+
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          console.log('Notification permission denied.');
+          toast.error('Notification permission denied.');
+          return;
+        }
+
+        const fcmToken = await getToken(messaging, { vapidKey: process.env.REACT_APP_VAPID_KEY });
+        if (fcmToken) {
+          const tokenData = {
+            userId: user._id,
+            token: fcmToken,
+          };
+
+          try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/fcm/save-token`, tokenData);
+            toast.success(response.data.message);
+          } catch (error) {
+            toast.error(error.response?.data?.message || "Error saving token.");
+          }
+        } else {
+          toast.error('Failed to retrieve FCM token.');
+        }
+      } catch (error) {
+        toast.error('Error retrieving FCM token.');
+      }
+    };
+
+    retrieveAndSaveToken();
+  }, [user]);
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+    <Layout style={{ minHeight: '100vh' }}>
+      <CongratulationsModal />
+      
+      {/* Sidebar with fixed position */}
+      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} style={{ position: 'fixed', height: '100vh', left: 0, top: 0, overflow: 'auto' }}>
+        <div className="logo" style={{ padding: '16px', color: '#fff', textAlign: 'center' }}></div>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1" icon={<BookOutlined />} onClick={() => handleViewChange('Courses')}>Courses</Menu.Item>
+          <Menu.Item key="2" icon={<FormOutlined />} onClick={() => handleViewChange('McqCards')}>MCQ</Menu.Item>
+          <Menu.Item key="3" icon={<FileTextOutlined />} onClick={() => handleViewChange('Notes')}>Notes</Menu.Item>
+          <Menu.Item key="4" icon={<CodeOutlined />} onClick={() => handleViewChange('Code Editor')}>Code Editor</Menu.Item>
+          <Menu.Item key="5" icon={<ShoppingCartOutlined />} onClick={() => handleViewChange('Code Store')}>Code Store</Menu.Item>
+          <Menu.Item key="6" icon={<PlusOutlined />} onClick={() => handleViewChange('Post_upload')}>Create Web Page</Menu.Item>
+          <Menu.Item key="7" icon={<ApiOutlined />} onClick={() => handleViewChange('ApiCards')}>APIs</Menu.Item>
+          <Menu.Item key="8" icon={<SmileOutlined />} onClick={() => handleViewChange('Ai_interview')}>AI Interview</Menu.Item>
+          <Menu.Item key="9" icon={<CommentOutlined />} onClick={() => handleViewChange('Chat')}>Chat</Menu.Item>
+          <Menu.Item key="10" icon={<CheckSquareOutlined />} onClick={() => handleViewChange('Task_System')}>Task Management</Menu.Item>
+
+          <Menu.Item key="13" icon={<VideoCameraFilled />} onClick={() => handleViewChange('meet')}>Meet</Menu.Item>
+          <Menu.Item key="11" icon={<SettingOutlined />} onClick={() => handleViewChange('Settings')}>Settings</Menu.Item>
+          <Menu.Item key="12" icon={<LogoutOutlined />} onClick={confirmLogout}>Logout</Menu.Item>
+        </Menu>
+      </Sider>
+
+      <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: 'margin-left 0.2s' }}>
+        {/* Header section with profile and notification icons */}
+        <Header style={{ background: '#fff', padding: '0 16px', display: 'flex', alignItems: 'center' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          <Space size={20} style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ marginTop: '10px' }}>
+              <Badge count={notificationCount} size="small">
+                <BellOutlined 
+                  style={{ fontSize: '28px', color: '#000', cursor: 'pointer' }} 
+                  onClick={() => setIsModalVisible(true)} // Open modal on icon click
+                />
+              </Badge>
+  
+              <Modal
+                title="Notifications"
+                visible={isModalVisible}
+                onCancel={handleModalClose}
+                footer={null}
+              >
+                <List
+                  dataSource={notifications}
+                  renderItem={(item) => (
+                    <List.Item onClick={() => handleNotificationClick(item)} style={{ cursor: 'pointer', }}>{/* borderBottom: '0.2px solid black' */}
+                      <List.Item.Meta
+                        title={item.title}
+                        description={item.body}
+                      />
+                    </List.Item>
+                  )}
+                />
+                {notifications.length === 0 && <div>No notifications available.</div>}
+              </Modal>
+  
+            </div>
+            <Avatar
+            src={user.profileImage || null} // Show profile image if available
+            icon={!user.profileImage ? <UserOutlined /> : null} // Show icon if no profile image
+            style={{ backgroundColor: '#87d068', cursor: 'pointer' }}
+            onClick={() => setIsProfileModalVisible(true)} // Open profile modal
+          />
+             {/* Profile Modal */}
+          <Modal
+          title="Profile Details"
+          visible={isProfileModalVisible}
+          onCancel={handleProfileModalClose}
+          footer={null}
+        >
+          <List>
+            <List.Item><strong>Username:</strong> {user.username}</List.Item>
+            <List.Item><strong>Email:</strong> {user.email}</List.Item>
+            <List.Item><strong>Role:</strong> {user.role}</List.Item>
+            <List.Item><strong>Location:</strong> {user.selectedDistrict || 'Not specified'}</List.Item>
+            <List.Item><strong>Batch:</strong> {user.batch || 'Not specified'}</List.Item>
+            <List.Item><strong>Phone no::</strong> {user.phoneNumber || 'No details provided.'}</List.Item>
+            <List.Item><strong>your apikey:</strong> {user.apikey || 'No details provided.'}</List.Item>
+            <List.Item><button onClick={logout} style={{ color: '#007bff', cursor: 'pointer' }}>Logout</button></List.Item>
+          </List>
+        </Modal>
+
+            
+          </Space>
+        </div>
+      </Header>
+
+        {/* Content section with only the inner content scrollable */}
+        <Content style={{ margin: '16px', overflowY: 'auto', height: 'calc(100vh - 64px)' }}>
+          <Drawer
+            title="Mobile Menu"
+            placement="left"
+            onClose={() => setOpenDrawer(false)}
+            visible={openDrawer}
+            bodyStyle={{ height: '100%', overflow: 'auto' }}
+            className="mobile-drawer"
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {[
-            { text: 'Courses', icon: <BookIcon />, action: () => handleViewChange('Courses') },
-            { text: 'MCQ', icon: <QuizIcon />, action: () => handleViewChange('McqCards')  },
-            { text: 'Notes', icon: <NotesIcon />, action: () => handleViewChange('Notes') },
-            { text: 'Code Editor', icon: <CodeIcon />, action: () => handleViewChange('Code Editor') },
-            { text: 'Code Store', icon: <ShoppingCartIcon />, action : ()=> handleViewChange('Code Store') },
-            { text: 'Create Web Page', icon: <AddBoxIcon />, action : ()=> handleViewChange('Post_upload') },
-          ].map((item, index) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={item.action || (() => console.log('Button clicked!'))}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {[
-            { text: `API's`, icon: <ApiIcon />, action: () => handleViewChange('ApiCards') },
-            { text: 'AI Interview', icon: <AiIcon /> , action : () => handleViewChange('Ai_interview') },
-            { text: 'Social Network', icon: <SocialIcon /> },
-            // { text: 'Profile', icon: <ProfileIcon />, action: () => handleViewChange('Profile') },
-            { text: 'Settings', icon: <SettingsIcon />, action : () => handleViewChange('Settings') },
-            { text: 'Logout', icon: <LogoutIcon />, action: confirmLogout },
-          ].map((item, index) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={item.action || (() => console.log('Button clicked!'))}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-        {renderView()}
-      </Main>
+            <Menu theme="dark" mode="inline" onClick={({ key }) => handleViewChange(key)}>
+              <Menu.Item key="Courses" icon={<BookOutlined />}>Courses</Menu.Item>
+              <Menu.Item key="McqCards" icon={<FormOutlined />}>MCQ</Menu.Item>
+              <Menu.Item key="Notes" icon={<FileTextOutlined />}>Notes</Menu.Item>
+              <Menu.Item key="Code Editor" icon={<CodeOutlined />}>Code Editor</Menu.Item>
+              <Menu.Item key="Code Store" icon={<ShoppingCartOutlined />}>Code Store</Menu.Item>
+              <Menu.Item key="Post_upload" icon={<PlusOutlined />}>Create Web Page</Menu.Item>
+              <Menu.Item key="ApiCards" icon={<ApiOutlined />}>APIs</Menu.Item>
+              <Menu.Item key="Ai_interview" icon={<SmileOutlined />}>AI Interview</Menu.Item>
+              <Menu.Item key="meet" icon={<VideoCameraFilled />}>Meet</Menu.Item>
+              <Menu.Item key="Chat" icon={<CommentOutlined />}>Chat</Menu.Item>
+              <Menu.Item key="Task_System" icon={<CheckSquareOutlined />}>Task Management</Menu.Item>
+              <Menu.Item key="Settings" icon={<SettingOutlined />}>Settings</Menu.Item>
+              <Menu.Item key="Logout" icon={<LogoutOutlined />} onClick={confirmLogout}>Logout</Menu.Item>
+            </Menu>
+          </Drawer>
 
-      <Tidio/>
-    </Box>
-
+          {/* Displaying the content based on the selected view */}
+          {renderView()}
+        </Content>
+      </Layout>
+    </Layout>
   );
 }
