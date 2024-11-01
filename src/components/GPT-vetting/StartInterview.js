@@ -17,6 +17,7 @@ const MyComponent = () => {
     const [isReadingIntro, setIsReadingIntro] = useState(true);
     const [progress, setProgress] = useState(0);
     const [timeLeft, setTimeLeft] = useState(100);
+    const [totalQuestions, setTotalQuestions] = useState(0); // New state for total questions
 
     const users = {
         username: user?.username,
@@ -32,7 +33,7 @@ const MyComponent = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/startinterview/getQuestions', {
+                const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/startinterview/getQuestions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(users)
@@ -45,12 +46,15 @@ const MyComponent = () => {
                         return;
                     }
 
+                    let questionCount = 0; // Variable to keep track of total questions
+
                     const flattenedQuestions = data.questions.flatMap(skillLevel => {
                         const skillQuestions = Object.values(skillLevel.questions).map(question => ({
                             question,
                             skill: skillLevel.skill,
                             level: skillLevel.level
                         }));
+                        questionCount += Math.min(skillQuestions.length, 15); // Add up to 15 questions per skill level
                         return getRandomQuestions(skillQuestions, 3);
                     });
 
@@ -60,6 +64,7 @@ const MyComponent = () => {
                     }
 
                     setQuestions(flattenedQuestions);
+                    setTotalQuestions(questionCount); // Update total questions
                     setCurrentSkillLevel({ skill: flattenedQuestions[0].skill, level: flattenedQuestions[0].level });
                 } else {
                     console.error('Error fetching questions:', response.statusText);
@@ -107,7 +112,7 @@ const MyComponent = () => {
             }
         
             setCurrentQuestionIndex(nextIndex);
-            setProgress(progress + 1);
+            setProgress((prevProgress) => prevProgress + 1);
             setTimeLeft(100); // Reset timer
         } else {
             handleSubmit(newResponses);
@@ -139,7 +144,7 @@ const MyComponent = () => {
 
     const handleSubmit = async (finalResponses = responses) => {
         try {
-            const response = await fetch('https://e-workspace-server-v1-ms-2.onrender.com/api/Aiservice/scoreMyAnswer', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/Aiservice/scoreMyAnswer`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ responses: finalResponses })
@@ -149,20 +154,21 @@ const MyComponent = () => {
                 const result = await response.json();
                 console.log(result, 'backend res');
     
-                // Use the full analysis response directly
-                
-    
                 Swal.fire({
                     title: "Analysis Result",
                     text: "Here are your scores and feedback.",
                     imageUrl: "https://media.istockphoto.com/id/1384642917/vector/3d-quality-guarantee-vector-medal-with-star-and-ribbon-vector-illustration-icon-realistic-3d.webp?s=1024x1024&w=is&k=20&c=VcZrZFr6ztsmJ2Y7rgkzCZ3HDyW2W89R3ayyAYHRZWk=", // Custom image URL
-                    imageWidth: 400,
+                    imageWidth: 1000,
                     imageHeight: 200,
-                    html: `<pre>${result.analysis}</pre>` // Display analysis text in preformatted style
+                    width:1000,
+                    html: `<pre>${result.analysis}</pre>`, // Display analysis text in preformatted style
+                    customClass: {
+                        popup: 'custom-swal-width',  // Add custom class to the popup
+                    },
                 }).then(() => {
                     navigate('/dashboard'); // Navigate to the dashboard after closing the modal
                 });
-    
+                
             } else {
                 console.error('Error submitting answers');
             }
@@ -170,9 +176,6 @@ const MyComponent = () => {
             console.error('Error submitting answers:', error);
         }
     };
-    
-    
-    
 
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
         return <div>Your browser does not support speech recognition software! Please use Chrome desktop, for example.</div>;
@@ -185,8 +188,8 @@ const MyComponent = () => {
     return (
         <div className="container">
             <div className="progress-bar">
-                <div className="progress" style={{ width: `${(progress / 45) * 100}%` }}></div>
-                <div className="progress-text">{progress}/45</div>
+                <div className="progress" style={{ width: `${(progress / totalQuestions) * 100}%` }}></div>
+                <div className="progress-text">{progress}/{totalQuestions}</div>
             </div>
             <div className="timer-bar">
                 <div className="timer" style={{ width: `${(timeLeft / 100) * 100}%` }}></div>
