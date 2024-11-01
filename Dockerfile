@@ -1,18 +1,26 @@
-# Use official Node.js image
-FROM node:18
+# Use a lightweight Node.js image
+FROM node:18-alpine
 
-# App directory create pannudhu
+# Set the working directory
 WORKDIR /app
 
-# Dependencies copy and install pannudhu
+# Copy package.json and package-lock.json files
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# App source code copy pannudhu
+# Copy the app source code
 COPY . .
 
-# App run panna port expose pannudhu
+# Build the React app
+RUN npm run build
+
+# Install a simple HTTP server to serve static files
+RUN npm install -g serve
+
+# Expose the port the app will run on
 EXPOSE 5000
 
-# Start command
-CMD ["node", "server.js"]
+# Use "serve" to serve the build directory at port 5000
+CMD ["serve", "-s", "build", "-l", "5000"]
