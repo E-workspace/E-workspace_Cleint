@@ -124,7 +124,7 @@ const AuthProvider = ({ children }) => {
         try {
             const csrfToken = await getCsrfToken(); // Fetch CSRF token
 
-            const response = await fetch(`${process.env.REACT_APP_API_URL_MS1}/auth/logout`, {
+            const response = await fetch(`https://e-workspace-server-v1-ms-1.onrender.com/auth/logout`, {
                 method: 'POST',
                 headers: { 'csrf-token': csrfToken },
                 credentials: 'include',
