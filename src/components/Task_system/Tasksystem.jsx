@@ -108,8 +108,8 @@ const TaskTable = () => {
     const fetchTasks = async () => {
       try {
         const url = showTodayTasks 
-        ? `https://test-bakend-2.onrender.com/getDailyTasks/today` // For the MS2 API
-        : `https://e-workspace-server-v1-ms-1.onrender.com/auth/tasks`; // For the MS1 API
+        ? `https://eworkspacems2-loszcsdz.b4a.run/api/getDailyTasks/today` // For the MS2 API
+        : `https://e-workspace-server-v1-ms-1.onrender.com/api/auth/tasks`; // For the MS1 API
     
         const response = await axios.get(url);
         setTaskList(response.data);
