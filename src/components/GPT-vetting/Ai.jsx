@@ -162,7 +162,7 @@ function Ai() {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/skills`, {
+      const response = await fetch(`https://test-bakend-2.onrender.com/skills`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -181,7 +181,7 @@ function Ai() {
         });
 
         if (bookingID) {
-          const checkResponse = await fetch(`${process.env.REACT_APP_API_URL_MS2}/checkBooking/${bookingID}`, {
+          const checkResponse = await fetch(`https://test-bakend-2.onrender.com/checkBooking/${bookingID}`, {
             method: 'GET'
           });
           if (checkResponse.ok) {
