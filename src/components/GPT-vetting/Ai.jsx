@@ -162,7 +162,7 @@ function Ai() {
     };
 
     try {
-      const response = await fetch(`https://test-bakend-2.onrender.com/skills`, {
+      const response = await fetch(`https://eworkspacems2-loszcsdz.b4a.run/api/skills`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -181,7 +181,7 @@ function Ai() {
         });
 
         if (bookingID) {
-          const checkResponse = await fetch(`https://test-bakend-2.onrender.com/checkBooking/${bookingID}`, {
+          const checkResponse = await fetch(`https://eworkspacems2-loszcsdz.b4a.run/api/checkBooking/${bookingID}`, {
             method: 'GET'
           });
           if (checkResponse.ok) {
