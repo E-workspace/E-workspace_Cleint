@@ -15,6 +15,8 @@ import Users from "./components/Chatpage/Components/Users_groups";
 import MediumDevice from "./components/Chatpage/Components/MediumDevice";
 import Media from './components/Skeloten_course_card_loader';
 import { notification } from 'antd';
+import MicCheck from './components/GPT-vetting/Miccheck';
+import MyComponent from './components/GPT-vetting/StartInterview';
 
 export const RefreshContext = createContext("");
 export const ChatContext = createContext("");
@@ -88,7 +90,10 @@ const App = () => {
               <Route path="/login" element={<PublicRoute element={<Login />} />} />
               <Route path="/verify-otp" element={<VerifyOTPRoute />} />
               <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
+              <Route path="/mic-check" element={<MicCheck />} />
+              <Route path="/start-interview" element={<MyComponent />} />
               <Route path="/" element={<Navigate to="/register" />} />
+
 
               {/* Main Application Routes */}
               <Route path="/" element={<Navigate to="/login" />} />
