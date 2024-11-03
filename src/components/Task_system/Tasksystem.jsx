@@ -83,7 +83,7 @@ const Image = styled('img')({
 
 const getCsrfToken = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL_MS1}/csrf-token`);
+    const response = await axios.get(`https://e-workspace-server-v1-ms-1.onrender.com/csrf-token`);
     return response.data.csrfToken;
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
@@ -108,8 +108,8 @@ const TaskTable = () => {
     const fetchTasks = async () => {
       try {
         const url = showTodayTasks 
-        ? `${process.env.REACT_APP_API_URL_MS2}/getDailyTasks/today` // For the MS2 API
-        : `${process.env.REACT_APP_API_URL_MS1}/auth/tasks`; // For the MS1 API
+        ? `https://test-bakend-2.onrender.com/getDailyTasks/today` // For the MS2 API
+        : `https://e-workspace-server-v1-ms-1.onrender.com/auth/tasks`; // For the MS1 API
     
         const response = await axios.get(url);
         setTaskList(response.data);
@@ -132,7 +132,7 @@ const TaskTable = () => {
     if (task.status === "New" ) {
       try {
         // Make the POST request to your backend on port 5000
-        const response = await axios.post(`${process.env.REACT_APP_API_URL_MS1}/updatedescription`, 
+        const response = await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/updatedescription`, 
           {
             id: task.id,
           },
@@ -199,7 +199,7 @@ const TaskTable = () => {
         );
   
         // Optionally, make an API call to save the GitHub link or update the status on the server
-        await axios.post(`${process.env.REACT_APP_API_URL_MS1}/updateGitrepo`, {
+        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/updateGitrepo`, {
           id: task.id,
           repoLink,
         }, {
@@ -233,7 +233,7 @@ const TaskTable = () => {
       const csrfToken = await getCsrfToken();
 
       if (!enabledTasks.includes(task.id)) {
-        await axios.post(`${process.env.REACT_APP_API_URL_MS1}/tasks`, {
+        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/tasks`, {
           id: task.id,
           title: task.title,
           date: task.date,
