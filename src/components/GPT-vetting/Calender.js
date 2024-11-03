@@ -25,7 +25,7 @@ export default function ResponsiveDatePickers() {
 
   React.useEffect(() => {
     // Fetch existing interview date for the user
-    fetch(`${process.env.REACT_APP_API_URL_MS2}/preBookedUser/checkdatestatus`, {
+    fetch(`https://test-bakend-2.onrender.com/preBookedUser/checkdatestatus`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export default function ResponsiveDatePickers() {
       return;
     }
 
-    fetch(`${process.env.REACT_APP_API_URL_MS2}/start-interview/selected-date`, {
+    fetch(`https://test-bakend-2.onrender.com/start-interview/selected-date`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
