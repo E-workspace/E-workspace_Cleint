@@ -33,7 +33,7 @@ const MyComponent = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/startinterview/getQuestions`, {
+                const response = await fetch(`https://test-bakend-2.onrender.com/startinterview/getQuestions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(users)
@@ -144,7 +144,7 @@ const MyComponent = () => {
 
     const handleSubmit = async (finalResponses = responses) => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/Aiservice/scoreMyAnswer`, {
+            const response = await fetch(`https://test-bakend-2.onrender.com/Aiservice/scoreMyAnswer`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ responses: finalResponses })
