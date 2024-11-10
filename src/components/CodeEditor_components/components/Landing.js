@@ -44,7 +44,7 @@ const binarySearchHelper = (arr, target, start, end) => {
 };
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const target = 5;
+const target = 10;
 console.log(binarySearch(arr, target));
 `;
 
