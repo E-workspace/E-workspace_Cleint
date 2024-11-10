@@ -9,7 +9,7 @@ const { TabPane } = Tabs;
 // Simulate fetching course data from an API
 const fetchCourseData = async () => {
   // You can replace this with the actual API call
-  const response = await fetch(`${process.env.REACT_APP_API_URL_MS2}/GetcourseData/CourseData`); // Replace with actual API endpoint
+  const response = await fetch(`https://eworkspacems2-loszcsdz.b4a.run/api/GetcourseData/CourseData`); // Replace with actual API endpoint
   if (!response.ok) throw new Error('Failed to fetch data');
   return response.json();
 };
