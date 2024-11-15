@@ -132,7 +132,7 @@ const TaskTable = () => {
     if (task.status === "New" ) {
       try {
         // Make the POST request to your backend on port 5000
-        const response = await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/updatedescription`, 
+        const response = await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/updatedescription`, 
           {
             id: task.id,
           },
@@ -199,7 +199,7 @@ const TaskTable = () => {
         );
   
         // Optionally, make an API call to save the GitHub link or update the status on the server
-        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/updateGitrepo`, {
+        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/updateGitrepo`, {
           id: task.id,
           repoLink,
         }, {
