@@ -83,7 +83,7 @@ const Image = styled('img')({
 
 const getCsrfToken = async () => {
   try {
-    const response = await axios.get(`https://e-workspace-server-v1-ms-1.onrender.com/csrf-token`);
+    const response = await axios.get(`https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token`);
     return response.data.csrfToken;
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
