@@ -233,7 +233,7 @@ const TaskTable = () => {
       const csrfToken = await getCsrfToken();
 
       if (!enabledTasks.includes(task.id)) {
-        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/tasks`, {
+        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/auth/tasks`, {
           id: task.id,
           title: task.title,
           date: task.date,
@@ -259,7 +259,7 @@ const TaskTable = () => {
         setEnabledTasks((prev) => [...prev, task.id]);
       }
     } catch (error) {
-      console.error('Error sending task:', error);
+      console.error('Error sending task:', error.message);
       Swal.fire({
         icon: 'error',
         title: 'Failed',
