@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
 
 
 
@@ -69,13 +70,18 @@ body {
 }
 
 .course_description {
-  font-family: 'Hind', sans-serif;
+  font-family: "Play", sans-serif;
   text-align: justify;
+  font-weight: 500;
+
 }
 
 .course_card_footer {
   padding: 10px 16px;
   margin-top: auto;
+  font-family: "Play", sans-serif;
+  font-weight: 900;
+  font: bolder;
 }
 
 .btn {
