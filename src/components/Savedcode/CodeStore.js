@@ -19,6 +19,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import MuiAlert from '@mui/material/Alert';
 import './codestore.css';
 import CloseIcon from '@mui/icons-material/Close';
@@ -26,7 +29,7 @@ import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const columns = [
   { id: 'filename', label: 'File Name', minWidth: 170 },
-  { id: 'date', label: 'Date', minWidth: 100 },
+  { id: 'date', label: 'Date Of Creation', minWidth: 100 },
   { id: 'actions', label: 'Actions', minWidth: 170, align: 'center' },
 ];
 
@@ -95,7 +98,7 @@ export default function StickyHeadTable() {
 
   const getData = async () => {
     try {
-      const response = await axios.post(`https://eworkspacems2-loszcsdz.b4a.run/api/getSavedCode/GetCode`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/getSavedCode/GetCode`, {
         username: user.username,
         email: user.email,
       });
@@ -118,7 +121,7 @@ export default function StickyHeadTable() {
 
   const handleDelete = async (filename) => {
     try {
-      await axios.delete(`https://eworkspacems2-loszcsdz.b4a.run/api/deleteCode/`, { data: { filename } });
+      await axios.delete(`${process.env.REACT_APP_API_URL_MS2}/deleteCode/`, { data: { filename } });
       getData();
     } catch (error) {
       console.error('Error deleting code:', error);
@@ -171,12 +174,18 @@ export default function StickyHeadTable() {
             <TableRow style={{ backgroundColor: 'black' }}>
               {columns.map((column) => (
                 <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth, color: 'white', backgroundColor: '#0096FF', fontFamily: 'Oswald, serif', fontWeight: '650' }}
-                >
-                  {column.label}
-                </TableCell>
+                key={column.id}
+                align={column.align}
+                style={{
+                  minWidth: column.minWidth,
+                  color: 'black', 
+                  fontFamily: "'Play', sans-serif", // Change font to Play
+                  fontWeight: 650,
+                }}
+              >
+                {column.label}
+              </TableCell>
+              
               ))}
             </TableRow>
           </TableHead>
@@ -191,17 +200,18 @@ export default function StickyHeadTable() {
                       if (column.id === 'actions') {
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            <Button variant="contained" color="primary" onClick={() => handleView(row.code, row.filename)}>
-                              View
-                            </Button>
-                            <Button variant="contained" color="secondary" onClick={() => confirmDelete(row.filename)} style={{ marginLeft: 8 }}>
-                              Delete
-                            </Button>
-                          </TableCell>
+                          <IconButton color="primary" onClick={() => handleView(row.code, row.filename)}>
+                            <VisibilityIcon />
+                          </IconButton>
+                          <IconButton color="secondary" onClick={() => confirmDelete(row.filename)} style={{ marginLeft: 8 }}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                        
                         );
                       }
                       return (
-                        <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth, fontWeight: '650', fontFamily: 'Oswald, sans-serif' }}>
+                        <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth, fontWeight: '650', fontFamily: 'play, sans-serif' }}>
                           {value}
                         </TableCell>
                       );
