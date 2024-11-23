@@ -4,6 +4,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
   FormControl,
 Select} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import VisibilityIcon from '@mui/icons-material/Visibility'; // Show
+import EditIcon from '@mui/icons-material/Edit'; // Edit
+import DeleteIcon from '@mui/icons-material/Delete'; // Delete
+import AddCircleIcon from '@mui/icons-material/AddCircle'; // Add
+
+
 import Draggable from 'react-draggable';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -15,6 +21,7 @@ import { Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { Modal, List } from 'antd';
+import './Notes.css'
 
 // Draggable Paper Component
 function PaperComponent(props) {
@@ -148,13 +155,34 @@ export default function DraggableDialog() {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <div>
-          <Button variant="outlined" onClick={() => handleShowNotes(record)}>Show Notes</Button>
-          <Button variant="outlined" onClick={() => handleEdit(record)}>Edit</Button>
-          <Button variant="outlined" onClick={() => handleDelete(record._id)}>Delete</Button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          {/* Show Button */}
+          <Tooltip title="Show">
+            <VisibilityIcon
+              onClick={() => handleShowNotes(record)}
+              style={{ color: '#0288d1', cursor: 'pointer' }}
+            />
+          </Tooltip>
+    
+          {/* Edit Button */}
+          <Tooltip title="Edit">
+            <EditIcon
+              onClick={() => handleEdit(record)}
+              style={{ color: '#1976d2', cursor: 'pointer' }}
+            />
+          </Tooltip>
+    
+          {/* Delete Button */}
+          <Tooltip title="Delete">
+            <DeleteIcon
+              onClick={() => handleDelete(record._id)}
+              style={{ color: '#d32f2f', cursor: 'pointer' }}
+            />
+          </Tooltip>
         </div>
       ),
-    },
+    }
+    
   ];
   
 
@@ -205,7 +233,7 @@ useEffect(() => {
   
     try {
       setLoading(true);
-      const response = await axios.post(`https://testms21-lsy8tzpz.b4a.run/api/Getnotes`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/Getnotes`, {
         email,
         username,
       }, {
@@ -223,7 +251,7 @@ useEffect(() => {
 
   const fetchCsrfToken = async () => {
     try {
-      const response = await fetch(`https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token'`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL_MS1}/csrf-token'`, {
         credentials: 'include',
       });
       const data = await response.json();
@@ -251,7 +279,7 @@ useEffect(() => {
       // Check if editing or adding a new note
       if (originalId) {
         // Edit existing note using the originalId
-        await axios.put(`https://testms21-lsy8tzpz.b4a.run/api/editNote/${originalId}`, payload, {
+        await axios.put(`${process.env.REACT_APP_API_URL_MS2}/editNote/${originalId}`, payload, {
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-Token": csrfToken,
@@ -261,7 +289,7 @@ useEffect(() => {
         toast.success("Note updated successfully!");
       } else {
         // Add new note
-        await axios.post(`https://testms21-lsy8tzpz.b4a.run/api/Savenotes`, payload, {
+        await axios.post(`${process.env.REACT_APP_API_URL_MS2}/Savenotes`, payload, {
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-Token": csrfToken,
@@ -327,7 +355,7 @@ useEffect(() => {
         setLoading(true); // Set loading state
         const csrfToken = await fetchCsrfToken();
   
-        await axios.delete(`https://testms21-lsy8tzpz.b4a.run/api/deleteNote/${noteId}`, {
+        await axios.delete(`${process.env.REACT_APP_API_URL_MS2}/deleteNote/${noteId}`, {
           headers: {
             "X-CSRF-Token": csrfToken,
           },
@@ -371,7 +399,7 @@ useEffect(() => {
             variant="outlined"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ width: '50%', height:'50px' }}
+           
           />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Switch
@@ -380,79 +408,129 @@ useEffect(() => {
                 setShowPastWeek(prev => !prev);
               }}
               color="primary"
-              inputProps={{ 'aria-label': 'Show past week notes' }}
+              inputProps={{ 'aria-label': 'past week notes' }}
             />
-            <span>Show Notes from Past Week</span>
+            <span>  Past Week</span>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Switch
               checked={showPastMonth}
               onChange={() => setShowPastMonth(prev => !prev)}
               color="primary"
-              inputProps={{ 'aria-label': 'Show past month notes' }}
+              inputProps={{ 'aria-label': 'past month notes' }}
             />
-            <span>Show Notes from Past Month</span>
+            <span>  Past Month</span>
           </Box>
         </Box>
       </Box>
 
       {/* Add/Edit Note Modal */}
       <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-        sx={{ '& .MuiDialog-paper': { width: '500px', borderRadius: '8px' } }}
+      open={open}
+      onClose={handleClose}
+      PaperComponent={PaperComponent}
+      aria-labelledby="draggable-dialog-title"
+      sx={{
+        '& .MuiDialog-paper': {
+          width: '500px',
+          borderRadius: '8px',
+          fontFamily: '"Play", sans-serif', // Apply font to the dialog paper
+        },
+      }}
+    >
+      <DialogTitle
+        style={{
+          cursor: 'move',
+          fontFamily: '"Play", sans-serif', // Apply font to the dialog title
+          fontWeight: '700', // Bold title
+        }}
+        id="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          {selectedNote ? 'Edit Note' : 'Add Note'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <Box
-              component="form"
-              sx={{ '& > :not(style)': { m: 1, width: '100%' } }}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                id="title"
-                label="Title"
-                variant="outlined"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                id="keyPoint"
-                label="Key Point"
-                variant="outlined"
-                value={keyPoint}
-                onChange={(e) => setKeyPoint(e.target.value)}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                id="description"
-                label="Description"
-                variant="outlined"
-                multiline
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                sx={{ mb: 2 }}
-              />
-            </Box>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} sx={{ backgroundColor: '#28a745', color: '#fff', '&:hover': { backgroundColor: '#218838' } }}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {selectedNote ? 'Edit Note' : 'Add Note'}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText
+          style={{
+            fontFamily: '"Play", sans-serif', // Apply font to the dialog content text
+            fontWeight: '400', // Regular weight for content text
+          }}
+        >
+          <Box
+            component="form"
+            sx={{
+              '& > :not(style)': { m: 1, width: '100%' },
+              fontFamily: '"Play", sans-serif', // Apply font to form
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              id="title"
+              label="Title"
+              variant="outlined"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              sx={{
+                mb: 2,
+                '& .MuiInputBase-root': { fontFamily: '"Play", sans-serif' }, // Apply font to TextField input
+                '& .MuiInputLabel-root': { fontFamily: '"Play", sans-serif' }, // Apply font to label
+              }}
+            />
+            <TextField
+              id="keyPoint"
+              label="Key Point"
+              variant="outlined"
+              value={keyPoint}
+              onChange={(e) => setKeyPoint(e.target.value)}
+              sx={{
+                mb: 2,
+                '& .MuiInputBase-root': { fontFamily: '"Play", sans-serif' },
+                '& .MuiInputLabel-root': { fontFamily: '"Play", sans-serif' },
+              }}
+            />
+            <TextField
+              id="description"
+              label="Description"
+              variant="outlined"
+              multiline
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              sx={{
+                mb: 2,
+                '& .MuiInputBase-root': { fontFamily: '"Play", sans-serif' },
+                '& .MuiInputLabel-root': { fontFamily: '"Play", sans-serif' },
+              }}
+            />
+          </Box>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          autoFocus
+          onClick={handleClose}
+          sx={{
+            fontFamily: '"Play", sans-serif', // Apply font to buttons
+            fontWeight: '400',
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSave}
+          sx={{
+            backgroundColor: '#28a745',
+            color: '#fff',
+            '&:hover': { backgroundColor: '#218838' },
+            fontFamily: '"Play", sans-serif', // Apply font to buttons
+            fontWeight: '400',
+          }}
+        >
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+    
 
       {/* View Note Modal */}
       <Dialog
@@ -489,13 +567,13 @@ useEffect(() => {
                 <Box sx={{ p: 2 }}>
                     {/* Key Point Section */}
                     <Box sx={{ mb: 2, borderBottom: '1px solid #000000', paddingBottom: '8px' }}>
-                        <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>Key Point:</p>
+                        <p style={{ fontWeight: '900', marginBottom: '8px',  }}>Key Point:</p>
                         <p>{selectedNote.keyPoint}</p>
                     </Box>
     
                     {/* Description Section */}
                     <Box sx={{ mb: 2, borderBottom: '1px solid #000000', paddingBottom: '8px' }}>
-                        <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>Description:</p>
+                        <p style={{ fontWeight: 'bold', marginBottom: '8px', }}>Description:</p>
                         <p>{selectedNote.description}</p>
                     </Box>
     
@@ -541,12 +619,21 @@ useEffect(() => {
             ) : (
               paginatedNotes.map((note, index) => (
                 <TableRow key={index}>
-                  {columns.map((column) => (
-                    <TableCell key={column.key}>
-                      {column.render ? column.render(note[column.dataIndex], note, index) : note[column.dataIndex]}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.key}
+                    style={{
+                      fontWeight: '600', // Bold for emphasis
+                      fontFamily: '"Play", sans-serif', // Apply the Play font here
+                    }}
+                  >
+                    {column.render
+                      ? column.render(note[column.dataIndex], note, index)
+                      : note[column.dataIndex]}
+                  </TableCell>
+                ))}
+              </TableRow>
+              
               ))
             )}
           </TableBody>
