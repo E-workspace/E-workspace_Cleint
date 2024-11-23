@@ -318,11 +318,12 @@ export default function Dashboard() {
                 />
               </Badge>
   
-              <Modal
+                 <Modal
                 title="Notifications"
                 visible={isModalVisible}
                 onCancel={handleModalClose}
                 footer={null}
+                style={{ fontFamily: 'Play, sans-serif' }} 
               >
                 <List
                   dataSource={notifications}
