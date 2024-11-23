@@ -21,7 +21,7 @@ import { Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { Modal, List } from 'antd';
-import './Notes.css'
+
 
 // Draggable Paper Component
 function PaperComponent(props) {
