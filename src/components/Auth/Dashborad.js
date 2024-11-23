@@ -346,22 +346,47 @@ export default function Dashboard() {
             onClick={() => setIsProfileModalVisible(true)} // Open profile modal
           />
              {/* Profile Modal */}
-          <Modal
+           <Modal
           title="Profile Details"
           visible={isProfileModalVisible}
           onCancel={handleProfileModalClose}
           footer={null}
+          width={700}
         >
-          <List>
-            <List.Item><strong>Username:</strong> {user.username}</List.Item>
-            <List.Item><strong>Email:</strong> {user.email}</List.Item>
-            <List.Item><strong>Role:</strong> {user.role}</List.Item>
-            <List.Item><strong>Location:</strong> {user.selectedDistrict || 'Not specified'}</List.Item>
-            <List.Item><strong>Batch:</strong> {user.batch || 'Not specified'}</List.Item>
-            <List.Item><strong>Phone no::</strong> {user.phoneNumber || 'No details provided.'}</List.Item>
-            <List.Item><strong>your apikey:</strong> {user.apikey || 'No details provided.'}</List.Item>
-            <List.Item><button onClick={logout} style={{ color: '#007bff', cursor: 'pointer' }}>Logout</button></List.Item>
-          </List>
+        <List style={{ fontFamily: 'Play, sans-serif', padding: '5px' }}>
+        <List.Item style={{ marginBottom: '10px' }}>
+          <strong style={{ marginRight: '5px' }}>Username:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.username}</span>
+        </List.Item>
+        <List.Item style={{ marginBottom: '5px' }}>
+          <strong style={{ marginRight: '5px' }}>Email:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.email}</span>
+        </List.Item>
+        <List.Item style={{ marginBottom: '10px' }}>
+          <strong style={{ marginRight: '5px' }}>Role:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.role}</span>
+        </List.Item>
+        <List.Item style={{ marginBottom: '10px' }}>
+          <strong style={{ marginRight: '5px' }}>Location:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.selectedDistrict || 'Not specified'}</span>
+        </List.Item>
+        <List.Item style={{ marginBottom: '10px' }}>
+          <strong style={{ marginRight: '5px' }}>Batch:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.batch || 'Not specified'}</span>
+        </List.Item>
+        <List.Item style={{ marginBottom: '10px' }}>
+          <strong style={{ marginRight: '5px' }}>Phone no:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.phoneNumber || 'No details provided.'}</span>
+        </List.Item>
+        <List.Item style={{ marginBottom: '10px' }}>
+          <strong style={{ marginRight: '5px' }}>Your API Key:</strong>
+          <span style={{ marginLeft: '5px' }}>{user.apikey || 'No details provided.'}</span>
+        </List.Item>
+        <List.Item>
+          <button onClick={logout} style={{ color: '#007bff', cursor: 'pointer' }}>Logout</button>
+        </List.Item>
+      </List>
+      
         </Modal>
 
             
