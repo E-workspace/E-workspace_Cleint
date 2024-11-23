@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Layout, Menu, Button, Drawer, Space, Avatar, Badge,  Modal, List, notification  } from 'antd';
+import { Layout, Menu, Button, Drawer, Space, Avatar, Badge,  Modal, List, notification ,Spin } from 'antd';
 import {
   BookOutlined,
   FormOutlined,
@@ -199,7 +199,11 @@ export default function Dashboard() {
 
   const renderView = () => {
     if (loading) {
-      return <div>Loading...</div>;
+      return (
+        <div className="loading-container">
+          <Spin size="large" /> {/* You can adjust the size */}
+        </div>
+      );
     }
 
     switch(view) {
@@ -260,7 +264,7 @@ export default function Dashboard() {
           };
 
           try {
-            const response = await axios.post(`https://eworkspacems2-loszcsdz.b4a.run/api/fcm/save-token`, tokenData);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/fcm/save-token`, tokenData);
             toast.success(response.data.message);
           } catch (error) {
             toast.error(error.response?.data?.message || "Error saving token.");
