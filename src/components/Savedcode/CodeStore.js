@@ -98,7 +98,7 @@ export default function StickyHeadTable() {
 
   const getData = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL_MS2}/getSavedCode/GetCode`, {
+      const response = await axios.post(`https://eworkspacems2-loszcsdz.b4a.run/api/getSavedCode/GetCode`, {
         username: user.username,
         email: user.email,
       });
@@ -121,7 +121,7 @@ export default function StickyHeadTable() {
 
   const handleDelete = async (filename) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL_MS2}/deleteCode/`, { data: { filename } });
+      await axios.delete(`https://eworkspacems2-loszcsdz.b4a.run/api/deleteCode/`, { data: { filename } });
       getData();
     } catch (error) {
       console.error('Error deleting code:', error);
