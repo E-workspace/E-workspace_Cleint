@@ -15,6 +15,7 @@ import {
   TextField,
   TablePagination,
 } from '@mui/material';
+import { FaRegEye, FaRegImage, FaCheckCircle, FaTasks } from 'react-icons/fa'; // Import Font Awesome Icons
 import { styled } from '@mui/system';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -22,6 +23,11 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { FormControl, Select, MenuItem } from '@mui/material';
+import DescriptionIcon from '@mui/icons-material/Description';
+import ImageIcon from '@mui/icons-material/Image';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import TaskIcon from '@mui/icons-material/Task';
+
 
 import axios from 'axios';
 
@@ -31,6 +37,8 @@ const StyledTableContainer = styled(TableContainer)({
   width: '100%',
   overflowX: 'auto',
   margin: '0 auto',
+  fontFamily: "'Play', sans-serif", // Apply Play font
+  fontWeight: 600, // Bold with weight 600
 });
 
 const StyledButton = styled(Button)(({ disabled }) => ({
@@ -51,7 +59,10 @@ const StyledTableCell = styled(TableCell)({
   '&:last-child': {
     borderRight: 'none',
   },
+  fontFamily: "'Play', sans-serif", // Apply Play font
+  fontWeight: 600, // Bold with weight 600
 });
+
 
 const StatusBox = styled(Box)(({ status }) => ({
   color: '#fff',
@@ -60,6 +71,8 @@ const StatusBox = styled(Box)(({ status }) => ({
   padding: '4px 8px',
   fontSize: '12px',
   textAlign: 'center',
+  fontFamily: "'Play', sans-serif", // Apply Play font
+  fontWeight: 600, // Bold with weight 600
 }));
 
 const ModalContent = styled(Box)({
@@ -74,6 +87,8 @@ const ModalContent = styled(Box)({
   boxShadow: 24,
   padding: '20px',
   outline: 'none',
+  fontFamily: "'Play', sans-serif", // Apply Play font
+  fontWeight: 600, // Bold with weight 600
 });
 
 const Image = styled('img')({
@@ -83,7 +98,7 @@ const Image = styled('img')({
 
 const getCsrfToken = async () => {
   try {
-    const response = await axios.get(`https://e-workspace-server-v1-ms-1.onrender.com/api/csrf-token`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL_MS1}/csrf-token`);
     return response.data.csrfToken;
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
@@ -108,8 +123,8 @@ const TaskTable = () => {
     const fetchTasks = async () => {
       try {
         const url = showTodayTasks 
-        ? `https://eworkspacems2-loszcsdz.b4a.run/api/getDailyTasks/today` // For the MS2 API
-        : `https://e-workspace-server-v1-ms-1.onrender.com/api/auth/tasks`; // For the MS1 API
+        ? `${process.env.REACT_APP_API_URL_MS2}/getDailyTasks/today` // For the MS2 API
+        : `${process.env.REACT_APP_API_URL_MS1}/auth/tasks`; // For the MS1 API
     
         const response = await axios.get(url);
         setTaskList(response.data);
@@ -132,7 +147,7 @@ const TaskTable = () => {
     if (task.status === "New" ) {
       try {
         // Make the POST request to your backend on port 5000
-        const response = await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/updatedescription`, 
+        const response = await axios.post(`${process.env.REACT_APP_API_URL_MS1}/updatedescription`, 
           {
             id: task.id,
           },
@@ -199,7 +214,7 @@ const TaskTable = () => {
         );
   
         // Optionally, make an API call to save the GitHub link or update the status on the server
-        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/updateGitrepo`, {
+        await axios.post(`${process.env.REACT_APP_API_URL_MS1}/updateGitrepo`, {
           id: task.id,
           repoLink,
         }, {
@@ -233,7 +248,7 @@ const TaskTable = () => {
       const csrfToken = await getCsrfToken();
 
       if (!enabledTasks.includes(task.id)) {
-        await axios.post(`https://e-workspace-server-v1-ms-1.onrender.com/api/auth/tasks`, {
+        await axios.post(`${process.env.REACT_APP_API_URL_MS1}/tasks`, {
           id: task.id,
           title: task.title,
           date: task.date,
@@ -259,7 +274,7 @@ const TaskTable = () => {
         setEnabledTasks((prev) => [...prev, task.id]);
       }
     } catch (error) {
-      console.error('Error sending task:', error.message);
+      console.error('Error sending task:', error);
       Swal.fire({
         icon: 'error',
         title: 'Failed',
@@ -324,13 +339,13 @@ const TaskTable = () => {
             displayEmpty
             style={{height:'40px', width:'100px'}}
           >
-            <MenuItem value=""><em>All</em></MenuItem>
-            <MenuItem value="Success">Success</MenuItem>
-            <MenuItem value="Pending">Pending</MenuItem>
-            <MenuItem value="New">New</MenuItem>
+            <MenuItem value="" style={{  fontFamily: "'Play', sans-serif" }}><em>All</em></MenuItem>
+            <MenuItem value="Success" style={{  fontFamily: "'Play', sans-serif" }}>Success</MenuItem>
+            <MenuItem value="Pending" style={{  fontFamily: "'Play', sans-serif" }}>Pending</MenuItem>
+            <MenuItem value="New" style={{  fontFamily: "'Play', sans-serif" }}>New</MenuItem>
           </Select>
         </FormControl>
-        <Typography component="span" mr={1}>
+        <Typography component="span" mr={1} style={{  fontFamily: "'Play', sans-serif" }}>
           Show Today’s Tasks
         </Typography>
         <Switch
@@ -358,56 +373,67 @@ const TaskTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterTasks(taskList)
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((task) => (
-                <TableRow key={task.id}>
-                  <StyledTableCell>{task.id}</StyledTableCell>
-                  <StyledTableCell>{task.title}</StyledTableCell>
-                  <StyledTableCell>{task.date}</StyledTableCell>
-                  <StyledTableCell>{task.dueDate}</StyledTableCell>
-                  <StyledTableCell>{task.technology}</StyledTableCell>
-                  {!showTodayTasks && (
-                    <StyledTableCell>
-                      <StyledButton
-                        // disabled={task.hasViewedDescription}
-                        onClick={() => handleOpenDescriptionModal(task)}
-                      >
-                        {task.hasViewedDescription ? 'Viewed' : 'Description'}
-                      </StyledButton>
-                    </StyledTableCell>
-                  )}
-                  {!showTodayTasks && (
-                    <StyledTableCell>
-                      <StyledButton onClick={() => handleOpenImageModal(task)}>Show Image</StyledButton>
-                    </StyledTableCell>
-                  )}
-                  {!showTodayTasks && (
-                    <StyledTableCell>
-                      <StyledButton
-                        disabled={task.status === 'Success'}
-                        onClick={() => handleSubmitRepo(task)}
-                      >
-                        Submit Task
-                      </StyledButton>
-                    </StyledTableCell>
-                  )}
-                  {showTodayTasks && (
-                    <StyledTableCell>
-                      <StyledButton
-                        disabled={enabledTasks.includes(task.id)}
-                        onClick={() => handleGetTask(task)}
-                      >
-                        {enabledTasks.includes(task.id) ? 'Task Enabled' : 'Enable Task'}
-                      </StyledButton>
-                    </StyledTableCell>
-                  )}
+          {filterTasks(taskList)
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((task) => (
+              <TableRow key={task.id}>
+                <StyledTableCell>{task.id}</StyledTableCell>
+                <StyledTableCell>{task.title}</StyledTableCell>
+                <StyledTableCell>{task.date}</StyledTableCell>
+                <StyledTableCell>{task.dueDate}</StyledTableCell>
+                <StyledTableCell>{task.technology}</StyledTableCell>
+        
+                {/* Description Icon */}
+                {!showTodayTasks && (
                   <StyledTableCell>
-                    <StatusBox status={task.status}>{task.status}</StatusBox>
+                    <FaRegEye
+                      onClick={() => handleOpenDescriptionModal(task)}
+                      style={{ cursor: 'pointer', fontSize: '20px' }}
+                    />
                   </StyledTableCell>
-                </TableRow>
-              ))}
-          </TableBody>
+                )}
+        
+                {/* Show Image Icon */}
+                {!showTodayTasks && (
+                  <StyledTableCell>
+                    <FaRegImage
+                      onClick={() => handleOpenImageModal(task)}
+                      style={{ cursor: 'pointer', fontSize: '20px' }}
+                    />
+                  </StyledTableCell>
+                )}
+        
+                {/* Submit Task Icon */}
+                {!showTodayTasks && (
+                  <StyledTableCell>
+                    <FaCheckCircle
+                      onClick={() => handleSubmitRepo(task)}
+                      disabled={task.status === 'Success'}
+                      style={{ cursor: 'pointer', fontSize: '20px' }}
+                    />
+                  </StyledTableCell>
+                )}
+        
+                {/* Get Task Icon */}
+                {showTodayTasks && (
+                  <StyledTableCell>
+                    <FaTasks
+                      onClick={() => handleGetTask(task)}
+                      disabled={enabledTasks.includes(task.id)}
+                      style={{ cursor: 'pointer', fontSize: '20px' }}
+                    />
+                  </StyledTableCell>
+                )}
+        
+                {/* Task Status */}
+                <StyledTableCell>
+                  <StatusBox status={task.status}>{task.status}</StatusBox>
+                </StyledTableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+        
+        
         </Table>
         <TablePagination
           component="div"
