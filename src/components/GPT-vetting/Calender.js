@@ -68,7 +68,7 @@ export default function ResponsiveDatePickers() {
       return;
     }
 
-    fetch(`https://eworkspacems2-loszcsdz.b4a.run/api/start-interview/selected-date`, {
+    fetch(`https://eworkspacems2-loszcsdz.b4a.run/api/startinterview/selected-date`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
