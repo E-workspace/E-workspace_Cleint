@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AuthProvider, useAuth } from './components/context/AuthContext';
 import Register from './components/Auth/Register';
+import WebPageInteractions from './components/WebPageInteractions';
 import Login from './components/Auth/Login';
 import Dashboard from './components/Auth/Dashborad';
 import OTPModal from './components/Auth/OTPModal';
@@ -84,6 +85,7 @@ const App = () => {
       <RefreshContext.Provider value={contextValue}>
         <ChatContext.Provider value={chatContextValue}>
           <div className="App">
+     <WebPageInteractions /> 
             <Routes>
               {/* Authentication Routes */}
               <Route path="/register" element={<PublicRoute element={<Register />} />} />
@@ -105,6 +107,7 @@ const App = () => {
                 <Route path="start-chats" element={<MediumDevice />} />
               </Route>
             </Routes>
+
           </div>
         </ChatContext.Provider>
       </RefreshContext.Provider>
